@@ -1,0 +1,150 @@
+{
+  "info": {
+    "_postman_id": "2ce64e5b-4519-4e58-ba96-4972081aa535",
+    "name": "Fase 6",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52907984",
+    "_collection_link": "https://go.postman.co/collection/52907984-2ce64e5b-4519-4e58-ba96-4972081aa535?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Error 401 - Sin token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/productos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "productos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login exitoso - Status 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"admin1\",\r\n    \"password\": \"1234\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Error 403 - Operario en ruta Admin",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3Mzc3NTM5MywianRpIjoiZmVkMzczMTktM2U3NC00NGMxLWEzZmQtZjIzM2NhYWE1NTQwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Im9wZXJhcmlvMSIsIm5iZiI6MTc3Mzc3NTM5MywiY3NyZiI6ImUzYWIwNzQwLTFhYTUtNDlhYi1hZjJmLWM4YjM3MDUyYmZjNSIsImV4cCI6MTc3Mzc3NjI5M30.arNC-rFfHkkN4GKVYONRuo11gs1sIHSyiHVcwob4hh8",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nombre\": \"Laptop\",\r\n    \"precio\": 1500000,\r\n    \"stock\": 10\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/productos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "productos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Inserción exitosa - Status 201",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3Mzc3NTIxMSwianRpIjoiYjhhYzc1YzAtZGZjYS00ZWYxLTk5YzYtNGRlNTU1MDY3ODM1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImFkbWluMSIsIm5iZiI6MTc3Mzc3NTIxMSwiY3NyZiI6IjgzMWU1MDJlLTI5NjAtNDNkYy05ZTNkLTZkYTQxYWEyOGUyNCIsImV4cCI6MTc3Mzc3NjExMX0.VLggjGaxHCmT_JviE79JkftNxAlc-tw-E15ojPBzHgY",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nombre\": \"Laptop\",\r\n    \"precio\": 1500000,\r\n    \"stock\": 10\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/api/productos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "productos"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
