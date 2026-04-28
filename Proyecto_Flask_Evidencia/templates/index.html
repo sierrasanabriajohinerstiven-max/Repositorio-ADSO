@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ titulo }}</title> {# Variable simple #}
+</head>
+
+<body>
+
+    {# ── Acceder a diccionarios ───────────────────── #}
+    <h1>Hola, {{ usuario.nombre }}!</h1>
+    <p>Email: {{ usuario.email }}</p>
+
+    {# ── Condicional ──────────────────────────────── #}
+    {% if usuario.activo %}
+    <span style="color:green">✓ Usuario activo</span>
+    {% else %}
+    <span style="color:red">✗ Usuario inactivo</span>
+    {% endif %}
+
+    {# ── Bucle ────────────────────────────────────── #}
+    <ul>
+        {% for articulo in articulos %}
+        <li>{{ loop.index }}. {{ articulo.titulo }}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>

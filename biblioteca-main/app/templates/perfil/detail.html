@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Perfil de {{ perfil.user.nameUser }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h6 mb-0 text-accent-primary"><i class="bi bi-person-bounding-box"></i> Detalles del Perfil</h2>
+            {% if perfil.user_id == current_user.idUser %}
+            <a href="{{ url_for('perfil.edit', id=perfil.idPerfil) }}" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square"></i> Editar Mi Perfil
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="card shadow-lg">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-4 border-end border-secondary border-opacity-10">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-person-circle display-1 text-accent-primary opacity-50"></i>
+                        </div>
+                        <h5 class="h6 text-uppercase letter-spacing-1 mb-3">Información Básica</h5>
+                        <p class="mb-1 text-dim small text-uppercase">Nombre de Usuario</p>
+                        <p class="fw-bold mb-3">{{ perfil.user.nameUser }}</p>
+                        
+                        <p class="mb-1 text-dim small text-uppercase">Correo Electrónico</p>
+                        <p class="fw-bold mb-3 text-truncate">{{ perfil.user.email }}</p>
+
+                        <p class="mb-1 text-dim small text-uppercase">Rol en Sistema</p>
+                        <span class="badge bg-dark border border-{{ 'success' if perfil.user.rol == 'admin' else 'info' }} text-uppercase">
+                            {{ perfil.user.rol }}
+                        </span>
+                    </div>
+                    <div class="col-md-8 ps-md-4">
+                        <h5 class="h6 text-uppercase letter-spacing-1 mb-3">Biografía y Acerca de</h5>
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-10" style="min-height: 150px;">
+                            {% if perfil.bio %}
+                                <p class="mb-0 lh-lg">{{ perfil.bio }}</p>
+                            {% else %}
+                                <p class="text-dim italic mb-0">Este usuario todavía no ha compartido su biografía.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top border-secondary border-opacity-10 d-flex gap-2">
+                <a href="{{ url_for('perfil.index') }}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                {% if current_user.rol == 'admin' %}
+                <a href="{{ url_for('perfil.delete', id=perfil.idPerfil) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este perfil?')">
+                    <i class="bi bi-trash"></i> Eliminar
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

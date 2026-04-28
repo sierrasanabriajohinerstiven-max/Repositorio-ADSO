@@ -1,0 +1,54 @@
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <i class="bi bi-cpu-fill"></i>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="nav-section">Operaciones</li>
+        
+        {% if current_user.is_authenticated %}
+            {% if current_user.rol == 'admin' %}
+            <li class="{{ 'active' if 'user.' in request.endpoint }}">
+                <a href="{{ url_for('user.index') }}"><i class="bi bi-shield-lock-fill"></i> Usuarios</a>
+            </li>
+            {% endif %}
+
+            <li class="{{ 'active' if 'author.' in request.endpoint }}">
+                <a href="{{ url_for('author.index') }}"><i class="bi bi-person-workspace"></i> Autores</a>
+            </li>
+
+            <li class="nav-section">Contenido</li>
+            <li class="{{ 'active' if 'post.' in request.endpoint }}">
+                <a href="{{ url_for('post.index') }}"><i class="bi bi-layers-fill"></i> Publicaciones</a>
+            </li>
+
+            <li class="{{ 'active' if 'tag.' in request.endpoint }}">
+                <a href="{{ url_for('tag.index') }}"><i class="bi bi-lightning-charge-fill"></i> Etiquetas</a>
+            </li>
+
+            <li class="nav-section">Preferencias</li>
+            <li class="{{ 'active' if 'room.' in request.endpoint }}">
+                <a href="{{ url_for('room.index') }}"><i class="bi bi-grid-1x2-fill"></i> Salas</a>
+            </li>
+
+            <li class="{{ 'active' if 'perfil.' in request.endpoint }}">
+                <a href="{{ url_for('perfil.mi_perfil') }}"><i class="bi bi-person-bounding-box"></i> Mi Perfil</a>
+            </li>
+
+            {% if current_user.rol == 'admin' %}
+            <li class="nav-section">Avanzado</li>
+            <li class="{{ 'active' if 'audit.' in request.endpoint }}">
+                <a href="{{ url_for('audit.index') }}"><i class="bi bi-shield-shaded"></i> Auditoría</a>
+            </li>
+            {% endif %}
+        {% endif %}
+    </ul>
+
+    {% if current_user.is_authenticated %}
+    <div class="logout-container">
+        <a href="{{ url_for('auth.logout') }}" class="logout-link">
+            <i class="bi bi-door-closed-fill"></i> &nbsp; Cerrar sesión
+        </a>
+    </div>
+    {% endif %}
+</nav>

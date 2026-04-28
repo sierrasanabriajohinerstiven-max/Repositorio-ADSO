@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Lista de Usuarios{% endblock %}
+{% block content %}
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h6 mb-0 text-electric-blue"><i class="bi bi-people-fill"></i> Usuarios</h2>
+                <div class="btn-group gap-1">
+                    <a href="{{ url_for('user.add') }}" class="btn btn-primary btn-sm py-0 px-2" style="font-size: 0.75rem;">
+                        <i class="bi bi-person-plus"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-success py-0 px-2" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#qrReaderModal">
+                        <i class="bi bi-qr-code-scan"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="d-flex mb-2">
+                <input type="text" id="searchInput" class="form-control form-control-sm w-50 py-0" style="font-size: 0.75rem;" placeholder="Filtrar...">
+            </div>
+            <div class="table-container shadow-lg">
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 60px;">ID</th>
+                <th style="width: 150px;">Nombre</th>
+                <th style="width: 120px;">Hash Pass</th>
+                <th style="width: 160px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="userTable">
+            {% for user in data %}
+                <tr>
+                    <td>{{ user.idUser }}</td>
+                    <td><span class="text-white fw-bold">{{ user.nameUser }}</span></td>
+                    <td>
+                        <span class="truncate-password" title="{{ user.passwordUser }}">
+                            {{ user.passwordUser }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group gap-1">
+                            <a href="{{ url_for('user.detail', id=user.idUser) }}" class="btn btn-outline-success btn-xs" title="Detalle">
+                                <i class="bi bi-person"></i>
+                            </a>
+                            <a href="{{ url_for('user.edit', id=user.idUser) }}" class="btn btn-outline-primary btn-xs" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="javascript:void(0);" 
+                               class="btn btn-outline-danger btn-xs" 
+                               data-bs-toggle="modal" 
+                               data-bs-target="#confirmDeleteModal" 
+                               data-url="{{ url_for('user.delete', id=user.idUser) }}"
+                               title="Eliminar usuario">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+
+                        {% if not user.perfil %}
+                        <a href="{{ url_for('perfil.add', user_id=user.idUser) }}" class="btn btn-warning btn-sm mb-1" title="Crear Perfil">
+                            <i class="bi bi-person-plus-fill"></i> Crear Perfil
+                        </a>
+                        {% endif %}
+                        <button type="button" class="btn btn-info btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#qrModal{{ user.idUser }}">
+                            <i class="bi bi-qr-code"></i>
+                        </button>
+                      
+                        <!-- Modal -->
+                        <div class="modal fade" id="qrModal{{ user.idUser }}" tabindex="-1" aria-labelledby="qrModalLabel{{ user.idUser }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="qrModalLabel{{ user.idUser }}">Código QR para {{ user.nameUser }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="{{ url_for('user.generate_qr', id=user.idUser) }}" alt="QR Code" class="img-fluid">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-sm w-100 mb-1" data-bs-dismiss="modal">Cerrar</button>
+                                        <a href="{{ url_for('user.generate_qr', id=user.idUser) }}" class="btn btn-primary btn-sm w-100 mb-1" download="qr_{{ user.nameUser }}.png">Guardar imagen</a>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#userTable tr');
+            rows.forEach(row => {
+                const userName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                if (userName.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+ 
+
+    <!-- Modal para lector de QR -->
+    <div class="modal fade" id="qrReaderModal" tabindex="-1" aria-labelledby="qrReaderModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrReaderModalLabel">Lector de Código QR</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor para el lector de QR -->
+                    <div id="reader" style="width: 100%;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let html5QrCode;
+
+        async function onScanSuccess(decodedText) {
+            try {
+                // Detener escáner antes de redirigir
+                await stopScanner();
+                
+                // Intentar parsear JSON o usar texto directo
+                let id = decodedText;
+                if (decodedText.startsWith('{')) {
+                    const json = JSON.parse(decodedText);
+                    id = json.idUser || json.ID;
+                }
+                
+                if (id) {
+                    window.location.href = `/User/detail/${id}`;
+                }
+            } catch (error) {
+                console.error("Error al procesar QR:", error);
+                alert("Código QR detectado: " + decodedText);
+            }
+        }
+
+        async function startScanner() {
+            const readerDiv = document.getElementById('reader');
+            readerDiv.innerHTML = '<div class="text-center p-3 text-info"><div class="spinner-border spinner-border-sm me-2"></div>Iniciando cámara...</div>';
+            
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+            try {
+                await html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+                readerDiv.style.border = "1px solid var(--accent-primary)";
+                readerDiv.style.borderRadius = "10px";
+            } catch (err) {
+                console.error("No se pudo iniciar el escáner:", err);
+                readerDiv.innerHTML = `<div class="alert alert-danger m-2 small">Error: ${err}. Verifica los permisos de cámara.</div>`;
+            }
+        }
+
+        async function stopScanner() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                try {
+                    await html5QrCode.stop();
+                    console.log("Cámara liberada correctamente.");
+                } catch (err) {
+                    console.error("Error al detener cámara:", err);
+                }
+            }
+        }
+
+        const qrReaderModalElement = document.getElementById('qrReaderModal');
+
+        qrReaderModalElement.addEventListener('shown.bs.modal', function () {
+            startScanner();
+        });
+
+        qrReaderModalElement.addEventListener('hidden.bs.modal', function () {
+            stopScanner().then(() => {
+                document.getElementById('reader').innerHTML = '';
+            });
+        });
+    </script>
+
+        <!-- Bootstrap y script de HTML5-Qrcode -->
+        <script src="{{ url_for('static', filename='html5-qrcode.min.js') }}"></script>
+    </div>
+</div>
+{% endblock %}

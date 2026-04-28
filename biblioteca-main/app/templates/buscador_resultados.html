@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block titulo_pagina %}Resultados de búsqueda: "{{ query }}"{% endblock %}
+
+{% block content %}
+<div class="buscador-resultados">
+    {% if query %}
+        <div class="mb-4">
+            <h5>Publicaciones ({{ results.publicaciones|length }})</h5>
+            {% if results.publicaciones %}
+                <ul class="list-group">
+                {% for pub in results.publicaciones %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ pub.tituloPublicacion }}</strong>
+                            <p class="mb-0 small text-muted">{{ pub.contenidoPublicacion[:100] }}...</p>
+                        </div>
+                        <a href="{{ url_for('post.list', id=pub.idPublicacion) }}" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No se encontraron publicaciones.</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <h5>Autores ({{ results.autores|length }})</h5>
+            {% if results.autores %}
+                <ul class="list-group">
+                {% for autor in results.autores %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ autor.nameAuthor }}
+                        <a href="{{ url_for('author.list', id=autor.idAuthor) }}" class="btn btn-sm btn-outline-primary">Ver libros</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No se encontraron autores.</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <h5>Salas ({{ results.salas|length }})</h5>
+            {% if results.salas %}
+                <ul class="list-group">
+                {% for sala in results.salas %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ sala.name }}</strong>
+                            <p class="mb-0 small text-muted">{{ sala.description }}</p>
+                        </div>
+                        <a href="{{ url_for('room.index') }}" class="btn btn-sm btn-outline-primary">Ver Listado</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No se encontraron salas.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p class="alert alert-info">Por favor, ingresa un término de búsqueda.</p>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{{ url_for('post.index') }}" class="btn btn-secondary">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}

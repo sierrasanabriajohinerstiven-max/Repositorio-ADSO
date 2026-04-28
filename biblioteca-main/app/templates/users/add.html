@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Agregar Usuario{% endblock %}
+{% block content %}
+<form action="{{ url_for('user.add') }}" method="post" class="needs-validation" novalidate>
+    <div class="form-group mb-3">
+        <label for="nameUser" class="form-label">Nombre:</label>
+        <input type="text" id="nameUser" name="nameUser" required class="form-control">
+        <div class="invalid-feedback">
+            Por favor, ingrese un nombre de usuario.
+        </div>
+    </div>
+    
+    <div class="form-group mb-3">
+        <label for="passwordUser" class="form-label">Contraseña:</label>
+        <input type="password" id="passwordUser" name="passwordUser" required class="form-control">
+        <div class="invalid-feedback">
+            Por favor, ingrese una contraseña.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" id="email" name="email" required class="form-control">
+        <div class="invalid-feedback">
+            Por favor, ingrese un correo electrónico válido.
+        </div>
+    </div>
+    {% if current_user.is_authenticated and current_user.rol == 'admin' %}
+    <div class="form-group mb-3">
+        <label for="rol" class="form-label">Rol:</label>
+        <select id="rol" name="rol" class="form-select">
+            <option value="user" selected>Usuario (Solo Ver)</option>
+            <option value="admin">Administrador (Acceso Total)</option>
+        </select>
+    </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+</form>
+
+{% endblock %}

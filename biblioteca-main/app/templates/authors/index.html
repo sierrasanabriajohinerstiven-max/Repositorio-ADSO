@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Lista de Autores{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6 mb-0 text-electric-blue"><i class="bi bi-person-workspace"></i> Autores</h2>
+                {% if current_user.rol == 'admin' %}
+                <a href="{{ url_for('author.add') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Agregar
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="table-container shadow-lg">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Nombre</th>
+                            <th>Nacionalidad</th>
+                            <th style="width: 150px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for author in data %}
+                            <tr>
+                                <td>{{ author.idAuthor }}</td>
+                                <td><span class="text-electric-blue fw-bold">{{ author.nameAuthor }}</span></td>
+                                <td>{{ author.nationalityAuthor }}</td>
+                                <td>
+                                    <div class="btn-group gap-1">
+                                        <a href="{{ url_for('buscador.index', q=author.nameAuthor) }}" class="btn btn-sm btn-outline-primary" title="Ver Libros">
+                                            <i class="bi bi-book"></i>
+                                        </a>
+
+                                        {% if current_user.rol == 'admin' %}
+                                        <a href="{{ url_for('author.edit', id=author.idAuthor) }}" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" 
+                                           class="btn btn-sm btn-outline-danger" 
+                                           data-bs-toggle="modal" 
+                                           data-bs-target="#confirmDeleteModal" 
+                                           data-url="{{ url_for('author.delete', id=author.idAuthor) }}"
+                                           title="Eliminar Autor">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Publicaciones con la etiqueta: {{ etiqueta.nombreEtiqueta }}{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for publicacion in publicaciones %}
+                <tr>
+                    <td>{{ publicacion.idPublicacion }}</td>
+                    <td>{{ publicacion.tituloPublicacion }}</td>
+                    <td>
+                        <a href="{{ url_for('post.list', id=publicacion.idPublicacion) }}" class="btn btn-sm btn-primary"><i class="bi bi-eye"></i></a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No hay publicaciones con esta etiqueta.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="d-flex gap-2">
+    <a href="{{ url_for('tag.index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver al listado de etiquetas</a>
+</div>
+{% endblock %}

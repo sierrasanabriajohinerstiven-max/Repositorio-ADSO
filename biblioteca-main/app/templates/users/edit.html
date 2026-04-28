@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Editar Usuario {{ user.nameUser }}{% endblock %}
+{% block content %}
+<h1>Editar Usuario</h1>
+<form action="{{ url_for('user.edit', id=user.idUser) }}" method="post">
+    <div class="form-group mb-3">
+        <label for="nameUser" class="form-label">Nombre:</label>
+        <input type="text" id="nameUser" name="nameUser" value="{{ user.nameUser }}" required class="form-control">
+    </div>
+
+
+    <div class="form-group mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" required class="form-control">
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="passwordUser" class="form-label">Contraseña:</label>
+        <input type="password" id="passwordUser" name="passwordUser" value="{{ user.passwordUser }}" required
+            class="form-control">
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="rol" class="form-label">Rol:</label>
+        <select id="rol" name="rol" class="form-select">
+            <option value="user" {% if user.rol == 'user' %}selected{% endif %}>Usuario (Solo Ver)</option>
+            <option value="admin" {% if user.rol == 'admin' %}selected{% endif %}>Administrador (Acceso Total)</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aplicación</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css')}}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='all.min.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Futuristic Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/futuristic.css') }}">
+</head>
+
+<body class="d-flex flex-column h-100 {% if not current_user.is_authenticated %}auth-body{% endif %}">
+  
+  <div id="wrapper">
+    <!-- Sidebar only if authenticated -->
+    {% if current_user.is_authenticated %}
+      {% include 'menu.html' %}
+    {% endif %}
+
+    <!-- Page Content -->
+    <div id="content">
+      <main class="flex-shrink-0 main-content">
+        <div class="container-fluid mx-auto">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}             
+              {% for category, message in messages %}
+                <div class="flash-message alert alert-{{ category }} alert-dismissible fade show mb-4" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>{% block titulo_pagina %}{% endblock %}</h4>
+                </div>
+                <div class="card-body">
+                  {% block content %}
+                  {% endblock %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer mt-auto py-4">
+    <div class="container text-center">
+      <span class="text-white opacity-50 small">
+          &copy; 2024 Biblioteca Intranet. Pulse [F5] para sincronizar.
+      </span>
+    </div>
+  </footer>
+
+    <!-- Modal de Confirmación Global -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="background: #14181c; border-radius: 20px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-white fw-bold">¿Confirmar Eliminación?</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="text-white opacity-75 mb-0">Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar este registro?</p>
+                </div>
+                <div class="modal-footer border-0 pt-0 d-flex gap-2">
+                    <button type="button" class="btn btn-secondary flex-grow-1" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="#" id="confirmDeleteBtn" class="btn btn-danger flex-grow-1">Sí, Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.js') }}"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Gestión del Modal de Eliminación
+            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            if (confirmDeleteModal) {
+                confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const deleteUrl = button.getAttribute('data-url');
+                    const confirmBtn = document.getElementById('confirmDeleteBtn');
+                    confirmBtn.setAttribute('href', deleteUrl);
+                });
+            }
+
+            // Limpiar formularios y recargar al volver atrás
+            window.onpageshow = function(event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    window.location.reload();
+                }
+            };
+        });
+    </script>
+
+
+</body>
+</html>

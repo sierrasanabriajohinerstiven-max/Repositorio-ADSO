@@ -1,0 +1,318 @@
+:root {
+    --bg-black: #0d0f11; /* Negro pálido / Gris muy oscuro */
+    --bg-darker: #111417;
+    --accent-primary: #00f3ff;
+    --accent-secondary: #39ff14;
+    --text-main: #ffffff;
+    --text-dim: rgba(255, 255, 255, 0.75); /* Más opacidad para legibilidad */
+    --border-radius-lg: 24px;
+    --sidebar-width: 250px;
+}
+
+body {
+    background-color: var(--bg-black) !important;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(0, 243, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(57, 255, 20, 0.05) 0%, transparent 40%);
+    color: var(--text-main) !important;
+    font-family: 'Outfit', sans-serif !important;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Sidebar structure - Advanced Dark */
+#sidebar {
+    width: var(--sidebar-width);
+    background: #14181c;
+    backdrop-filter: blur(40px);
+    height: calc(100vh - 40px);
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+#sidebar .sidebar-header {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+#sidebar .sidebar-header i {
+    font-size: 2.2rem;
+    color: var(--accent-primary);
+    opacity: 0.9;
+}
+
+#sidebar ul.components {
+    padding: 0.5rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+#sidebar ul.components::-webkit-scrollbar { display: none; }
+
+.nav-section {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    padding: 1rem 1.5rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#sidebar ul li a {
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-radius: 50px;
+    margin-bottom: 2px;
+    font-size: 0.85rem;
+}
+
+#sidebar ul li a i {
+    margin-right: 12px;
+    font-size: 1.1rem;
+}
+
+#sidebar ul li a:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: #ffffff;
+}
+
+#sidebar ul li.active > a {
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--accent-primary);
+}
+
+/* Logout */
+.logout-container {
+    padding: 0.8rem 1rem;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logout-link {
+    color: #ff4444 !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 50px;
+    background: rgba(255, 68, 68, 0.05);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* Content Layout (Optimized Spacing) */
+#content {
+    margin-left: calc(var(--sidebar-width) + 15px);
+    padding: 10px;
+    min-height: 100vh;
+}
+
+.auth-body #content {
+    margin-left: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: #14181c !important; /* Ligeramente más claro que el fondo principal */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: var(--border-radius-lg) !important;
+    color: #ffffff !important;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
+}
+
+.card-header {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 1.25rem 2rem !important; /* Más padding para 'aire' */
+    text-align: left;
+}
+
+.auth-body .card-header { text-align: center !important; }
+
+.card-header h4 {
+    color: var(--accent-primary) !important;
+    font-weight: 800;
+    font-size: 1.15rem;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+
+/* Overrides for Bootstrap Utilities - Ensuring global uniformity */
+.bg-light { background-color: rgba(255, 255, 255, 0.03) !important; color: #fff !important; }
+.alert-secondary { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: var(--text-dim) !important; }
+.rounded-3, .rounded { border-radius: 15px !important; }
+.text-muted { color: var(--text-dim) !important; }
+
+/* Table - Deep Dark Professional */
+.table-container {
+    background: #000000 !important;
+    padding: 15px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+    max-height: 750px; /* Más espacio vertical */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.table-container::-webkit-scrollbar { width: 4px; }
+.table-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 10px; }
+
+.table {
+    background: transparent !important;
+    color: #ffffff !important;
+    font-size: 0.95rem !important; /* Fuente más legible */
+    margin-bottom: 0;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.table thead th {
+    color: #ffffff !important;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 1.25rem !important; /* Más espacioso */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15) !important;
+    font-size: 0.8rem;
+    font-weight: 800;
+    background: #14181c !important;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table tbody tr {
+    background-color: transparent !important;
+}
+
+.table tbody td {
+    padding: 1.1rem 1.25rem !important; /* Más espaciado vertical y horizontal */
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    background-color: transparent !important;
+}
+
+
+/* Forzar blanco en utilidades de color dentro de tablas */
+.table td, 
+.table th,
+.table span:not(.badge),
+.table a:not(.btn),
+.table code {
+    color: #ffffff !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #050505 !important;
+}
+
+
+.table-hover tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+
+/* Alertas Visibles en Modo Oscuro */
+.alert {
+    border-radius: 12px !important;
+    border: none !important;
+    backdrop-filter: blur(10px);
+    color: #000 !important;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.alert-success { 
+    background: #87CEFA !important; /* Azul Clarito (LightSkyBlue) */
+    color: #003366 !important; /* Texto azul oscuro para contraste */
+}
+.alert-warning { background: #ffcc00 !important; }
+.alert-danger { background: #ff4444 !important; }
+.alert-info { background: var(--accent-primary) !important; }
+
+
+/* Botones Extra Pequeños (Custom) */
+.btn-xs {
+    padding: 2px 6px !important;
+    font-size: 0.7rem !important;
+    border-radius: 6px !important;
+}
+
+/* Utilidades de Truncado Refinadas */
+.truncate-password {
+    display: inline-block;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.65rem !important;
+    opacity: 0.7;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ffffff !important;
+    cursor: help;
+}
+
+.truncate-password:hover {
+    max-width: none;
+    background: #111;
+    position: absolute;
+    z-index: 1000;
+    opacity: 1;
+    padding: 2px 8px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Tablas Compactas */
+.table td {
+    padding: 0.5rem 0.8rem !important;
+}
+
+/* Forms & Buttons */
+.form-control, .form-select {
+    background: #0a0a0a !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    padding: 10px 15px !important;
+    font-size: 0.9rem;
+}
+
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2) !important;
+}
+
+.btn {
+    border-radius: 12px !important;
+    padding: 8px 18px !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-primary { background: var(--accent-primary) !important; color: #000 !important; border: none !important; }
+.btn-success { background: var(--accent-secondary) !important; color: #000 !important; border: none !important; }
+.btn-outline-primary { border-color: var(--accent-primary) !important; color: var(--accent-primary) !important; }
+.btn-outline-primary:hover { background: var(--accent-primary) !important; color: #000 !important; }

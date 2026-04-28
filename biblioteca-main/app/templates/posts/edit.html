@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo_pagina %}Editar Publicación{% endblock %}
+{% block content %}
+<form action="{{ url_for('post.edit', id=publicacion.idPublicacion) }}" method="post" class="needs-validation" novalidate>
+    <div class="form-group mb-3">
+        <label for="titulo" class="form-label">Título:</label>
+        <input type="text" id="titulo" name="titulo" value="{{ publicacion.tituloPublicacion }}" required class="form-control">
+        <div class="invalid-feedback">Por favor, ingrese un título.</div>
+    </div>
+    
+    <div class="form-group mb-3">
+        <label for="contenido" class="form-label">Contenido:</label>
+        <textarea id="contenido" name="contenido" rows="5" required class="form-control">{{ publicacion.contenidoPublicacion }}</textarea>
+        <div class="invalid-feedback">Por favor, ingrese el contenido.</div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="form-label">Etiquetas:</label>
+        <div class="row px-3">
+            {% for etiqueta in etiquetas %}
+            <div class="form-check col-md-3">
+                <input class="form-check-input" type="checkbox" name="etiquetas" value="{{ etiqueta.idEtiqueta }}" id="etiqueta{{ etiqueta.idEtiqueta }}"
+                {% if etiqueta in publicacion.etiquetas %} checked {% endif %}>
+                <label class="form-check-label" for="etiqueta{{ etiqueta.idEtiqueta }}">
+                    {{ etiqueta.nombreEtiqueta }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-warning text-white"><i class="bi bi-save"></i> Actualizar Publicación</button>
+        <a href="{{ url_for('post.index') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}
