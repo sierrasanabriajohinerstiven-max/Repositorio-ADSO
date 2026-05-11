@@ -1,0 +1,139 @@
+/* app/static/css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+:root {
+    --bg-dark: #121212;
+    --card-dark: #1e1e1e;
+    --text-light: #e0e0e0;
+    --accent-gold: #d4af37;
+    --accent-gold-hover: #b5952f;
+    --accent-choc: #3e2723;
+}
+
+.brand-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #d4af37 !important;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.bg-cacao {
+    background-image: linear-gradient(rgba(18, 18, 18, 0.7), rgba(18, 18, 18, 0.9)), url('../img/cacao_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: var(--accent-choc) !important;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: #fff !important;
+    font-weight: 500;
+}
+
+.navbar-custom .nav-link:hover {
+    color: var(--accent-gold) !important;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    border-color: var(--accent-gold);
+}
+
+.card-title {
+    color: var(--accent-gold);
+}
+
+/* Buttons */
+.btn-primary-custom {
+    background-color: var(--accent-gold);
+    color: #000;
+    border: none;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--accent-gold-hover);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-outline-custom {
+    background-color: transparent;
+    color: var(--accent-gold);
+    border: 2px solid var(--accent-gold);
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 18px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+    background-color: var(--accent-gold);
+    color: #000;
+}
+
+.text-bone {
+    color: #EAE0C8 !important;
+}
+
+/* Forms */
+.form-label {
+    color: #EAE0C8;
+    font-weight: 500;
+}
+
+.form-control {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+.form-control:focus {
+    background-color: #333;
+    border-color: var(--accent-gold);
+    color: #fff;
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(234, 224, 200, 0.5);
+}
+
+/* Flash Messages */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-success { background-color: rgba(40, 167, 69, 0.2); color: #28a745; }
+.alert-danger { background-color: rgba(220, 53, 69, 0.2); color: #dc3545; }
+.alert-warning { background-color: rgba(255, 193, 7, 0.2); color: #ffc107; }
+.alert-info { background-color: rgba(23, 162, 184, 0.2); color: #17a2b8; }

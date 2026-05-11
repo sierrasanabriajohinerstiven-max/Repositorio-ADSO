@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card bg-dark border-warning h-100 overflow-hidden d-flex align-items-center justify-content-center" style="min-height: 300px;">
+            {% if product.image_file and product.image_file != 'default.jpg' %}
+            <img src="{{ url_for('static', filename='img/' + product.image_file) }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="{{ product.name }}">
+            {% else %}
+            <i class="fa-solid fa-cookie fa-10x text-warning py-5"></i>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4 h-100">
+            <h1 class="text-warning mb-3">{{ product.name }}</h1>
+            <h2 class="mb-4 text-bone">${{ "%.2f"|format(product.price) }}</h2>
+            <p class="lead text-light mb-4">{{ product.description }}</p>
+            <p class="text-bone mb-4">Stock disponible: {{ product.stock }} unidades</p>
+            
+            <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="POST" class="mt-auto">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-auto">
+                        <label for="quantity" class="col-form-label text-bone">Cantidad:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" id="quantity" name="quantity" class="form-control bg-dark text-light border-secondary" value="1" min="1" max="{{ product.stock if product.stock > 0 else 1 }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary-custom btn-lg w-100">
+                    <i class="fa-solid fa-cart-plus me-2"></i> Añadir al Carrito
+                </button>
+            </form>
+            <a href="{{ url_for('main.index') }}" class="btn btn-outline-light mt-3">Volver al Catálogo</a>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Preparación -->
+<div class="row mt-5 mb-4">
+    <div class="col-12">
+        <div class="card bg-dark border-warning shadow-lg">
+            <div class="card-body p-md-5 p-4 text-center">
+                <h3 class="text-warning mb-4"><i class="fa-solid fa-mug-hot"></i> ¿Cómo preparar la taza perfecta? 🍫✨</h3>
+                <div class="row justify-content-center text-start">
+                    <div class="col-md-9 col-lg-8 text-bone fs-5">
+                        <div class="p-3 border border-secondary rounded bg-opacity-10 bg-warning">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-3 d-flex align-items-start">
+                                    <span class="fs-4 me-3">🔥</span> 
+                                    <span><strong>Paso 1:</strong> Pon a calentar una taza de agua o leche (¡la que prefieras!).</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <span class="fs-4 me-3">🍫</span> 
+                                    <span><strong>Paso 2:</strong> Agrega <strong>una pastilla de Cacao Marichuy</strong> por cada taza de líquido justo cuando comience a hervir.</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <span class="fs-4 me-3">🥄</span> 
+                                    <span><strong>Paso 3:</strong> Revuelve o bate bien (si tienes molinillo, mucho mejor) hasta que se derrita por completo y haga espuma.</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <span class="fs-4 me-3">🍯</span> 
+                                    <span><strong>Paso 4:</strong> Endulza con panela o el endulzante de tu preferencia. Como nuestro cacao es 100% puro y sin azúcar, ¡tú tienes el control total del dulzor!</span>
+                                </li>
+                                <li class="d-flex align-items-start">
+                                    <span class="fs-4 me-3">😌</span> 
+                                    <span><strong>Paso 5:</strong> Sirve bien caliente, acompáñalo con tu pan o queso favorito y disfruta del verdadero sabor del campo. ☕❤️</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

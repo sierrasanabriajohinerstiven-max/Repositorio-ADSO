@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg p-5 mt-4 text-center bg-dark border-warning">
+            <h2 class="text-warning mb-4"><i class="fa-solid fa-mobile-screen-button"></i> Pago Manual con Nequi</h2>
+            
+            <div class="alert alert-info bg-secondary text-bone border-0 mb-4">
+                <p class="fs-5 mb-2"><i class="fa-solid fa-heart text-warning"></i> ¡Gracias por elegir a Marichuy!</p>
+                <p class="mb-0">Para completar tu pedido, escanea el código QR desde tu app Nequi. Una vez adjuntes tu comprobante de pago en la parte inferior y lo verifiquemos, <strong>te enviaremos el recibo oficial en PDF al correo:</strong> <span class="text-warning">{{ order.customer_email or order.customer.email }}</span>.</p>
+            </div>
+            
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0 text-center">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#qrModal" title="Toca para agrandar">
+                        <img src="{{ url_for('static', filename='img/qr_nequi.png') }}" alt="Código QR Nequi" class="img-fluid rounded border border-secondary p-2 shadow" style="max-height: 350px; cursor: pointer; transition: transform 0.2s;">
+                    </a>
+                    <p class="text-muted mt-2 small mb-2"><i class="fa-solid fa-magnifying-glass-plus"></i> Toca la imagen para agrandar</p>
+                    <a href="{{ url_for('static', filename='img/qr_nequi.png') }}" download="QR_Nequi_Marichuy.png" target="_blank" class="btn btn-sm btn-outline-warning">
+                        <i class="fa-solid fa-download me-1"></i>Descargar QR
+                    </a>
+                </div>
+                <div class="col-md-6 text-md-start">
+                    <h4 class="text-bone mb-3">Detalles del Pago</h4>
+                    <p class="text-light mb-1"><strong>Pedido:</strong> #{{ order.id }}</p>
+                    <p class="text-light mb-1"><strong>Total a Pagar:</strong> <span class="text-warning fs-4 fw-bold">${{ "%.2f"|format(order.total_amount) }}</span></p>
+                    <p class="text-light mb-3"><strong>A nombre de:</strong> JOHINER SIERRA</p>
+                </div>
+            </div>
+            
+            <hr class="border-secondary">
+            
+            <div class="mt-4 text-start">
+                <h5 class="text-warning mb-3"><i class="fa-solid fa-camera"></i> Adjuntar Comprobante</h5>
+                <p class="text-bone mb-4">Para poder procesar y verificar tu pedido, es indispensable que nos envíes la captura de pantalla de la transferencia exitosa. ¡Apenas lo envíes, tu recibo llegará directo a tu correo!</p>
+                
+                <form method="POST" action="" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="mb-3">
+                        <label for="proof" class="form-label text-light">Selecciona tu comprobante (Imagen)</label>
+                        <input class="form-control bg-dark text-light border-secondary" type="file" id="proof" name="proof" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100 mt-2">
+                        <i class="fa-solid fa-paper-plane me-2"></i>Enviar Comprobante y Recibir PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agrandar QR -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark border-warning">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title text-warning" id="qrModalLabel">Código QR Nequi</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center p-2 bg-white rounded-bottom">
+        <img src="{{ url_for('static', filename='img/qr_nequi.png') }}" class="img-fluid w-100" alt="Código QR Nequi Grande">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

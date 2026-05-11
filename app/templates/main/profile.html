@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-warning mb-4"><i class="fa-solid fa-user"></i> Mi Perfil</h2>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card p-4 text-center">
+            <i class="fa-solid fa-circle-user fa-5x text-secondary mb-3"></i>
+            <h4 class="text-bone">{{ current_user.username }}</h4>
+            <p class="text-bone">{{ current_user.email }}</p>
+            <p class="badge bg-primary">Miembro desde {{ current_user.created_at.strftime('%B %Y') }}</p>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h4 class="mb-4 border-bottom border-secondary pb-2 text-warning"><i class="fa-solid fa-box-open"></i> Historial de Pedidos</h4>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Total</th>
+                            <th>Método</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                            <td>
+                                {% if order.payment_method == 'nequi' %}
+                                <span class="badge" style="background-color: #c984f5; color: black;">Nequi</span>
+                                {% else %}
+                                <span class="badge bg-success">Efectivo</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.status == 'Completado' %}
+                                <span class="badge bg-success">Completado</span>
+                                {% elif order.status == 'Cancelado' %}
+                                <span class="badge bg-danger">Cancelado</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" class="text-center text-bone">Aún no has realizado ningún pedido.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

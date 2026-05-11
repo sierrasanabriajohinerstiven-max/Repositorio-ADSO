@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 text-center">
+        <div class="card p-5 bg-dark border-warning">
+            {% if payment_method == 'efectivo' %}
+            <h2 class="text-warning mb-4">🎉 ¡Gracias por elegir Marichuy!</h2>
+            <p class="lead text-bone">Tu pedido ha sido recibido correctamente y será preparado lo antes posible.</p>
+            <div class="alert alert-warning my-4 bg-transparent border-warning text-warning fs-5">
+                <i class="fa-solid fa-money-bill-wave fa-2x mb-3"></i><br>
+                <strong>Recuerda que el pago se realizará en efectivo al momento de la entrega.</strong>
+            </div>
+            <p class="lead text-bone mb-4">🍫 ¡Esperamos que disfrutes nuestro chocolate!</p>
+            {% else %}
+            <h2 class="text-warning mb-4">🎉 ¡Gracias por elegir Marichuy!</h2>
+            <p class="lead text-bone">Tu pedido ha sido recibido correctamente.</p>
+            <!-- Espacio reservado para el mensaje de Nequi -->
+            {% endif %}
+            
+            <div class="mt-4">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary-custom btn-lg m-2">
+                    <i class="fa-solid fa-store me-2"></i> Volver al Catálogo
+                </a>
+                <a href="{{ url_for('main.profile') }}" class="btn btn-outline-light btn-lg m-2">
+                    <i class="fa-solid fa-user me-2"></i> Ver mis Pedidos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

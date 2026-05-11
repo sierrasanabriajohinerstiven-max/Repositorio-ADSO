@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-lg p-4 mt-5">
+            <h2 class="text-center mb-4 text-warning"><i class="fa-solid fa-user-lock"></i> Iniciar Sesión</h2>
+            <form method="POST" action="">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <button class="btn btn-outline-warning" type="button" onclick="togglePassword('password', 'toggleIconLogin')">
+                            <i id="toggleIconLogin" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary-custom w-100">Ingresar</button>
+            </form>
+            <div class="text-center mt-3">
+                <p class="text-bone">¿No tienes cuenta? <a href="{{ url_for('auth.register') }}" class="text-warning text-decoration-none">Regístrate aquí</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
