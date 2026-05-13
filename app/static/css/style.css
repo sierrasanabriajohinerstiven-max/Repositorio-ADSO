@@ -137,3 +137,62 @@ body {
 .alert-danger { background-color: rgba(220, 53, 69, 0.2); color: #dc3545; }
 .alert-warning { background-color: rgba(255, 193, 7, 0.2); color: #ffc107; }
 .alert-info { background-color: rgba(23, 162, 184, 0.2); color: #17a2b8; }
+
+/* WhatsApp Floating Button */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    color: #FFF;
+    transform: scale(1.1) rotate(10deg);
+}
+
+/* Footer */
+.footer-custom {
+    background-color: #0a0a0a;
+    border-top: 2px solid var(--accent-gold);
+    color: #aaa;
+    padding: 50px 0 20px 0;
+    margin-top: 100px;
+}
+
+.footer-custom h5 {
+    color: var(--accent-gold);
+    font-family: 'Cinzel', serif;
+    margin-bottom: 25px;
+}
+
+.footer-custom a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-custom a:hover {
+    color: var(--accent-gold);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 20px;
+    margin-top: 40px;
+    font-size: 0.9rem;
+}

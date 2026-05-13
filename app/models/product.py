@@ -10,5 +10,8 @@ class Product(db.Model):
     image_file = db.Column(db.String(255), nullable=False, default='default.jpg')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def __init__(self, **kwargs):
+        super(Product, self).__init__(**kwargs)
+
     def __repr__(self):
         return f'<Product {self.name}>'

@@ -23,7 +23,12 @@
                     <td>{{ product.id }}</td>
                     <td>{{ product.name }}</td>
                     <td>${{ "%.2f"|format(product.price) }}</td>
-                    <td>{{ product.stock }}</td>
+                    <td class="{{ 'text-danger fw-bold' if product.stock < 10 }}">
+                        {{ product.stock }}
+                        {% if product.stock < 10 %}
+                        <i class="fa-solid fa-triangle-exclamation ms-1" title="Stock Bajo"></i>
+                        {% endif %}
+                    </td>
                     <td>
                         <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-sm btn-outline-info me-2"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
                         <form action="{{ url_for('admin.delete_product', product_id=product.id) }}" method="POST" class="d-inline">

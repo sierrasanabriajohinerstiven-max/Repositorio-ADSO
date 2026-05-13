@@ -24,10 +24,14 @@ def dashboard():
     products_count = Product.query.count()
     orders_count = Order.query.count()
     recent_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
+    low_stock_products = Product.query.filter(Product.stock < 10).all()
+    
     return render_template('admin/dashboard.html', 
                            products_count=products_count, 
                            orders_count=orders_count,
-                           recent_orders=recent_orders)
+                           recent_orders=recent_orders,
+                           low_stock_count=len(low_stock_products),
+                           low_stock_products=low_stock_products)
 
 @admin.route('/products')
 @login_required
@@ -111,6 +115,7 @@ def api_clients():
         'id': u.id,
         'username': u.username,
         'email': u.email,
+        'order_count': u.orders.count(),
         'created_at': u.created_at.strftime('%Y-%m-%d %H:%M')
     } for u in users])
 

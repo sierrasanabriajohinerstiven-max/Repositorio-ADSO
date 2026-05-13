@@ -3,21 +3,28 @@
 <h2 class="text-warning mb-4"><i class="fa-solid fa-gauge"></i> Dashboard Administrativo</h2>
 
 <div class="row g-4 mb-5">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card p-4 text-center border-primary bg-dark">
             <h5 class="text-primary">Productos</h5>
             <h2 class="display-5">{{ products_count }}</h2>
-            <a href="{{ url_for('admin.products') }}" class="btn btn-sm btn-outline-primary mt-2">Gestionar Productos</a>
+            <a href="{{ url_for('admin.products') }}" class="btn btn-sm btn-outline-primary mt-2">Gestionar</a>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card p-4 text-center border-success bg-dark">
-            <h5 class="text-success">Pedidos Totales</h5>
+            <h5 class="text-success">Pedidos</h5>
             <h2 class="display-5">{{ orders_count }}</h2>
             <a href="{{ url_for('admin.orders') }}" class="btn btn-sm btn-outline-success mt-2">Ver Pedidos</a>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <div class="card p-4 text-center border-danger bg-dark">
+            <h5 class="text-danger">Bajo Stock</h5>
+            <h2 class="display-5 {{ 'text-danger fw-bold' if low_stock_count > 0 }}">{{ low_stock_count }}</h2>
+            <a href="{{ url_for('admin.products') }}" class="btn btn-sm btn-outline-danger mt-2">Revisar Stock</a>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card p-4 text-center border-warning bg-dark">
             <h5 class="text-warning">Ir a la Tienda</h5>
             <i class="fa-solid fa-store fa-3x mt-2 mb-3"></i>
@@ -45,7 +52,7 @@
                 {% for order in recent_orders %}
                 <tr>
                     <td>#{{ order.id }}</td>
-                    <td>{{ order.customer.username }}</td>
+                    <td>{{ order.customer.username if order.customer else 'Cliente no encontrado' }}</td>
                     <td>${{ "%.2f"|format(order.total_amount) }}</td>
                     <td>
                         {% if order.payment_method == 'nequi' %}
@@ -83,7 +90,8 @@
                 <tr>
                     <th class="text-bone">Usuario</th>
                     <th class="text-bone">Correo Electrónico</th>
-                    <th class="text-bone">Fecha de Registro</th>
+                    <th class="text-bone">Compras</th>
+                    <th class="text-bone">Registro</th>
                     <th class="text-bone">Acción</th>
                 </tr>
             </thead>
@@ -103,17 +111,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 const tbody = document.querySelector("#clientsTable tbody");
                 tbody.innerHTML = "";
                 if (data.length === 0) {
-                    tbody.innerHTML = "<tr><td colspan='4' class='text-center text-bone'>No hay clientes registrados aún.</td></tr>";
+                    tbody.innerHTML = "<tr><td colspan='5' class='text-center text-bone'>No hay clientes registrados aún.</td></tr>";
                     return;
                 }
                 data.forEach(client => {
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
                         <td class="text-bone"><i class="fa-solid fa-user-circle me-2 text-secondary"></i>${client.username}</td>
-                        <td class="text-bone">${client.email}</td>
-                        <td><span class="badge bg-primary">${client.created_at}</span></td>
+                        <td class="text-bone text-muted">${client.email}</td>
+                        <td><span class="badge bg-success">${client.order_count}</span></td>
+                        <td><span class="badge bg-secondary">${client.created_at}</span></td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDeleteClient(${client.id})" title="Eliminar Cliente">
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDeleteClient(${client.id})" title="Eliminar Cliente">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>

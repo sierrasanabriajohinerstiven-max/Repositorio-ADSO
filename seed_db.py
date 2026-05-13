@@ -16,10 +16,15 @@ with app.app_context():
     truffles = Product.query.filter_by(name='Trufas Artesanales Premium').first()
     if not truffles:
         truffles = Product(
+            # pyrefly: ignore [unexpected-keyword]
             name='Trufas Artesanales Premium',
+            # pyrefly: ignore [unexpected-keyword]
             description='Una exquisita selección de trufas rellenas de ganache oscuro, elaboradas con el mejor cacao y un toque de licor, espolvoreadas con polvo de oro comestible. Perfecto para regalar.',
+            # pyrefly: ignore [unexpected-keyword]
             price=25000.0,
+            # pyrefly: ignore [unexpected-keyword]
             stock=50,
+            # pyrefly: ignore [unexpected-keyword]
             image_file='truffles.png'
         )
         db.session.add(truffles)

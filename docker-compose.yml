@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      # Sincroniza el código local con el contenedor para desarrollo
+      - .:/app
+      # Evita que el entorno virtual y el caché local sobrescriban los del contenedor
+      - /app/venv
+      - /app/__pycache__
+    environment:
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_DEBUG=1
+    env_file:
+      - .env
+    restart: unless-stopped

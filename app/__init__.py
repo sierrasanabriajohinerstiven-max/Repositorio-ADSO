@@ -1,9 +1,19 @@
+# pyrefly: ignore [missing-import]
+import os
+from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+# pyrefly: ignore [missing-import]
 from flask_login import LoginManager
+# pyrefly: ignore [missing-import]
 from flask_bcrypt import Bcrypt
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 from config import Config
+# pyrefly: ignore [missing-import]
 from flask_wtf.csrf import CSRFProtect
+# pyrefly: ignore [missing-import]
 from flask_mail import Mail
 
 db = SQLAlchemy()
