@@ -26,8 +26,17 @@ csrf = CSRFProtect()
 mail = Mail()
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_class)
+
+    # Aseguramos que la carpeta de instancia exista para SQLite
+    os.makedirs(app.instance_path, exist_ok=True)
+    db_uri = app.config.get('SQLALCHEMY_DATABASE_URI', '')
+    if db_uri.startswith('sqlite:///'):
+        db_path = db_uri[len('sqlite:///'):]
+        db_dir = os.path.dirname(db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
 
     db.init_app(app)
     bcrypt.init_app(app)

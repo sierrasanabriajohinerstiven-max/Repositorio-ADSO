@@ -1,14 +1,28 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+instance_path = os.path.join(basedir, 'instance')
+os.makedirs(instance_path, exist_ok=True)
+
+# Normalize sqlite URLs so relative paths are converted to absolute paths.
+def _normalize_sqlite_url(url: str) -> str:
+    if not url.startswith('sqlite:///'):
+        return url
+
+    sqlite_path = url[len('sqlite:///'):]
+    if sqlite_path.startswith('/'):
+        return url
+
+    sqlite_path = os.path.abspath(os.path.join(basedir, sqlite_path))
+    return 'sqlite:///' + sqlite_path
 
 class Config:
     # Generar una clave aleatoria si no existe para desarrollo local, 
     # pero advertir que en producción DEBE estar definida.
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-please-change-in-production'
     
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'instance', 'app.db')
+    SQLALCHEMY_DATABASE_URI = _normalize_sqlite_url(os.environ.get('DATABASE_URL', '')) or \
+        'sqlite:///' + os.path.join(instance_path, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Flask-Mail config
