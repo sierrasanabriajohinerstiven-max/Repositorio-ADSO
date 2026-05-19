@@ -6,11 +6,11 @@ os.makedirs(instance_path, exist_ok=True)
 
 # Normalize sqlite URLs so relative paths are converted to absolute paths.
 def _normalize_sqlite_url(url: str) -> str:
-    if not url.startswith('sqlite:///'):
+    if not url or not url.startswith('sqlite:///'):
         return url
 
     sqlite_path = url[len('sqlite:///'):]
-    if sqlite_path.startswith('/'):
+    if os.path.isabs(sqlite_path):
         return url
 
     sqlite_path = os.path.abspath(os.path.join(basedir, sqlite_path))

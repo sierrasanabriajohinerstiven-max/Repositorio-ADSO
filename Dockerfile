@@ -7,6 +7,7 @@ WORKDIR /app
 # Instalar las dependencias del sistema necesarias para compilar ciertos paquetes si es necesario
 RUN apt-get update && apt-get install -y \
     build-essential \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar el archivo de dependencias
@@ -18,8 +19,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el resto del código de la aplicación
 COPY . .
 
+# Convertir line endings y dar permisos de ejecución al entrypoint
+RUN dos2unix /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Crear el directorio instance para la base de datos SQLite
+RUN mkdir -p /app/instance && chmod 777 /app/instance
+
 # Exponer el puerto en el que se ejecuta la aplicación
 EXPOSE 5000
 
-# Comando para ejecutar la aplicación
-CMD ["python", "run.py"]
+# Usar entrypoint para crear directorios en tiempo de ejecución (después de los volume mounts)
+ENTRYPOINT ["/app/entrypoint.sh"]
