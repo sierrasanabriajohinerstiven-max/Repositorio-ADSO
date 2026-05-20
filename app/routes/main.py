@@ -90,6 +90,10 @@ def checkout():
     if request.method == 'POST':
         payment_method = request.form.get('payment_method')
         address = request.form.get('address')
+        address_desc = request.form.get('address_description', '').strip()
+        if address_desc:
+            address = f"{address} | Info: {address_desc}"
+        
         phone = request.form.get('phone')
         customer_name = request.form.get('customer_name')
         customer_email = request.form.get('customer_email')

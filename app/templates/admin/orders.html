@@ -40,7 +40,7 @@
                         </form>
                     </td>
                     <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td>
+                    <td class="d-flex gap-2 justify-content-center">
                         {% if order.payment_proof %}
                         <button type="button" onclick="showProofModal('{{ url_for('admin.view_proof', order_id=order.id) }}')" class="btn btn-sm btn-outline-info" title="Ver Comprobante">
                             <i class="fa-solid fa-image"></i>
@@ -48,6 +48,10 @@
                         {% else %}
                         <button class="btn btn-sm btn-outline-secondary" disabled title="Sin comprobante"><i class="fa-solid fa-eye-slash"></i></button>
                         {% endif %}
+                        <form action="{{ url_for('admin.delete_order', order_id=order.id) }}" method="POST" class="m-0" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este pedido? Esta acción no se puede deshacer.');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar Pedido"><i class="fa-solid fa-trash"></i></button>
+                        </form>
                     </td>
                 </tr>
                 {% else %}

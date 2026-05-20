@@ -24,7 +24,11 @@
                         <label for="quantity" class="col-form-label text-bone">Cantidad:</label>
                     </div>
                     <div class="col-auto">
-                        <input type="number" id="quantity" name="quantity" class="form-control bg-dark text-light border-secondary" value="1" min="1" max="{{ product.stock if product.stock > 0 else 1 }}">
+                        <div class="input-group" style="width: 140px;">
+                            <button class="btn btn-outline-warning" type="button" onclick="const q=document.getElementById('quantity'); if(q.value>1)q.value--;"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="quantity" name="quantity" class="form-control bg-dark text-light border-warning text-center" value="1" min="1" max="{{ product.stock if product.stock > 0 else 1 }}">
+                            <button class="btn btn-outline-warning" type="button" onclick="const q=document.getElementById('quantity'); if(q.value<q.max)q.value++;"><i class="fa-solid fa-plus"></i></button>
+                        </div>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary-custom btn-lg w-100">

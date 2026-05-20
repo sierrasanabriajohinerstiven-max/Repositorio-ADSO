@@ -105,6 +105,20 @@ def update_order_status(order_id):
         flash(f'Estado del pedido #{order.id} actualizado a {new_status}.', 'success')
     return redirect(url_for('admin.orders'))
 
+@admin.route('/orders/delete/<int:order_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    # The cascading delete (if configured in models) will delete order_items, 
+    # but to be safe we'll delete them manually first just in case
+    for item in order.items:
+        db.session.delete(item)
+    db.session.delete(order)
+    db.session.commit()
+    flash(f'Pedido #{order.id} eliminado exitosamente.', 'success')
+    return redirect(url_for('admin.orders'))
+
 @admin.route('/api/clients')
 @login_required
 def api_clients():
