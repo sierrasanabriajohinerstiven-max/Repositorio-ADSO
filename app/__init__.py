@@ -60,7 +60,7 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_notifications():
         from flask_login import current_user as ctx_user
-        if ctx_user.is_authenticated and not ctx_user.is_admin:
+        if ctx_user.is_authenticated:
             from app.models.notification import Notification
             unread = Notification.query.filter_by(user_id=ctx_user.id, is_read=False).count()
             recent_notifications = Notification.query.filter_by(user_id=ctx_user.id)\
