@@ -6,7 +6,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
     payment_method = db.Column(db.String(50), nullable=False) # 'nequi' o 'efectivo'
-    status = db.Column(db.String(50), default='Preparando tu pedido') # Preparando tu pedido, Pedido en camino, Pedido entregado, Cancelado
+    status = db.Column(db.String(50), default='Verificando pedido') # Verificando pedido, Preparando tu pedido, Pedido en camino, Pedido entregado, Cancelado
     shipping_address = db.Column(db.String(255), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
     customer_name = db.Column(db.String(100), nullable=True)

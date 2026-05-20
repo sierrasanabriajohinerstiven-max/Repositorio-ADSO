@@ -44,7 +44,9 @@
 {% elif order.status == 'Pedido en camino' %}
     <span class="badge bg-warning text-dark">Pedido en camino</span>
 {% elif order.status == 'Preparando tu pedido' %}
-    <span class="badge bg-info text-dark">Preparando tu pedido</span>
+    <span class="badge bg-primary">Preparando tu pedido</span>
+{% elif order.status == 'Verificando pedido' %}
+    <span class="badge bg-info text-dark">Verificando pedido</span>
 {% else %}
     <span class="badge bg-danger">Cancelado</span>
 {% endif %}

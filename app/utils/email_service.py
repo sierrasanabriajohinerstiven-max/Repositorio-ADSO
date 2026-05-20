@@ -135,6 +135,12 @@ def send_nequi_confirmation(email, name, total, products, pdf_path=None):
 def send_status_email(order, new_status, customer_email, customer_name):
     try:
         status_config = {
+            'Verificando pedido': {
+                'subject': f'Estamos verificando tu pedido #{order.id}',
+                'heading': 'Verificando pedido',
+                'message': 'Hemos recibido tu solicitud y actualmente estamos verificando los detalles y el pago. Pronto comenzaremos a prepararlo.',
+                'color': '#17a2b8'
+            },
             'Preparando tu pedido': {
                 'subject': f'Tu pedido #{order.id} está en preparación',
                 'heading': '¡Tu pedido está en preparación!',
