@@ -102,7 +102,7 @@ def generate_receipt(order, cart_items):
     c.setStrokeColor(HexColor("#E0E0E0"))
     
     for p_id, item in cart_items.items():
-        c.drawString(60, y, str(item['name'])[:40])
+        c.drawString(60, y, str(item['name'])[:50])
         c.drawCentredString(320, y, str(item['quantity']))
         c.drawCentredString(420, y, f"${item['price']:,.2f}")
         c.drawCentredString(520, y, f"${item['price'] * item['quantity']:,.2f}")
