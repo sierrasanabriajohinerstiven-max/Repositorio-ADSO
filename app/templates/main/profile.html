@@ -23,6 +23,7 @@
                             <th>Método</th>
                             <th>Estado</th>
                             <th>Fecha</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,9 +48,14 @@
                                 {% endif %}
                             </td>
                             <td>{{ order.created_at|format_datetime }}</td>
+                            <td>
+                                <a href="{{ url_for('main.download_receipt', order_id=order.id) }}" class="btn btn-sm btn-outline-warning" title="Descargar Recibo">
+                                    <i class="fa-solid fa-file-pdf"></i> PDF
+                                </a>
+                            </td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-bone">Aún no has realizado ningún pedido.</td></tr>
+                        <tr><td colspan="6" class="text-center text-bone">Aún no has realizado ningún pedido.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

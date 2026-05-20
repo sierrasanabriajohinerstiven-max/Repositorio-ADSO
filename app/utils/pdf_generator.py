@@ -21,6 +21,11 @@ def generate_receipt(order, cart_items):
     c.setFillColor(bg_color)
     c.rect(0, 0, width, height, fill=1, stroke=0)
     
+    bg_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'static', 'img', 'plantilla_recibo.png')
+    if os.path.exists(bg_path):
+        c.drawImage(bg_path, 0, 0, width=width, height=height, preserveAspectRatio=False)
+
+    
     # 2. LOGO / TÍTULO PRINCIPAL
     c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 36)
