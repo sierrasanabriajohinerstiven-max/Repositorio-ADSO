@@ -28,6 +28,10 @@ def add_to_cart(product_id):
     product = Product.query.get_or_404(product_id)
     quantity = int(request.form.get('quantity', 1))
     
+    if quantity <= 0:
+        flash('La cantidad debe ser mayor a 0 para añadir al carrito.', 'warning')
+        return redirect(request.referrer or url_for('main.index'))
+    
     if 'cart' not in session:
         session['cart'] = {}
         
