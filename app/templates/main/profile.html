@@ -39,13 +39,15 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if order.status == 'Completado' %}
-                                <span class="badge bg-success">Completado</span>
-                                {% elif order.status == 'Cancelado' %}
-                                <span class="badge bg-danger">Cancelado</span>
-                                {% else %}
-                                <span class="badge bg-warning text-dark">Pendiente</span>
-                                {% endif %}
+{% if order.status == 'Pedido Entregado' %}
+    <span class="badge bg-success">Pedido Entregado</span>
+{% elif order.status == 'Pedido en camino' %}
+    <span class="badge bg-warning text-dark">Pedido en camino</span>
+{% elif order.status == 'Preparando tu pedido' %}
+    <span class="badge bg-info text-dark">Preparando tu pedido</span>
+{% else %}
+    <span class="badge bg-danger">Cancelado</span>
+{% endif %}
                             </td>
                             <td>{{ order.created_at|format_datetime }}</td>
                             <td>

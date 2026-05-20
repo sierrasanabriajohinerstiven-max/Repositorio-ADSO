@@ -202,11 +202,24 @@ def download_receipt(order_id):
         mimetype='application/pdf'
     )
 
+from app.models.notification import Notification
+
 @main.route('/profile')
 @login_required
 def profile():
     user_orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc()).all()
-    return render_template('main/profile.html', orders=user_orders)
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+    return render_template('main/profile.html', orders=user_orders, notifications=notifications)
+
+@main.route('/clear_notifications', methods=['POST'])
+@login_required
+def clear_notifications():
+    from app.models.notification import Notification
+    from app import db
+    Notification.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
+    flash('Notificaciones limpiadas.', 'success')
+    return redirect(url_for('main.profile'))
 
 @main.route('/download_qr')
 def download_qr():

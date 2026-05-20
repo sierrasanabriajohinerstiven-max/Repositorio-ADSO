@@ -4,6 +4,7 @@ from app import db
 from app.models.product import Product
 from app.models.order import Order
 from app.models.user import User
+from app.models.notification import Notification
 from app.utils.timezone import format_datetime
 from functools import wraps
 
@@ -100,8 +101,17 @@ def delete_product(product_id):
 def update_order_status(order_id):
     order = Order.query.get_or_404(order_id)
     new_status = request.form.get('status')
-    if new_status in ['Pendiente', 'Completado', 'Cancelado']:
-        order.status = new_status
+    if new_status in ['Preparando tu pedido', 'Pedido en camino', 'Pedido Entregado', 'Cancelado']:
+        if order.status != new_status:
+            order.status = new_status
+            
+            # Crear notificación para el usuario
+            notification = Notification(
+                user_id=order.user_id,
+                message=f"El estado de tu pedido #{order.id} se actualizó a: {new_status}"
+            )
+            db.session.add(notification)
+            
         db.session.commit()
         flash(f'Estado del pedido #{order.id} actualizado a {new_status}.', 'success')
     return redirect(url_for('admin.orders'))

@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=colombia_now)
     orders = db.relationship('Order', backref='customer', lazy='dynamic')
+    notifications = db.relationship('Notification', backref='user', lazy='dynamic', cascade="all, delete-orphan", order_by="desc(Notification.created_at)")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
