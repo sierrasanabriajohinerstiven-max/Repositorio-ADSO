@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request, send_file
 from werkzeug.utils import secure_filename
 import os
+import io
 from app.utils.pdf_generator import generate_receipt
 from app.utils.email_service import send_nequi_confirmation
 from flask_login import current_user, login_required
@@ -190,15 +191,16 @@ def download_receipt(order_id):
         flash('Acceso denegado.', 'danger')
         return redirect(url_for('main.index'))
         
-    pdf_path = os.path.abspath(os.path.join('instance', 'receipts', f'recibo_{order.id}.pdf'))
-    if os.path.exists(pdf_path):
-        # Enviar el archivo para descarga en el navegador
-        
-        # Enviar el archivo para descarga en el navegador
-        return send_file(pdf_path, as_attachment=True, download_name=f'Recibo_Marichuy_Pedido_{order.id}.pdf', mimetype='application/pdf')
-    else:
-        flash('El recibo no está disponible.', 'warning')
-        return redirect(url_for('main.profile'))
+    # Generar el PDF dinámicamente para que siempre tenga el estado actualizado
+    cart_items = {str(item.product_id): {'name': item.product.name, 'quantity': item.quantity, 'price': item.price} for item in order.items}
+    pdf_bytes, _ = generate_receipt(order, cart_items)
+    
+    return send_file(
+        io.BytesIO(pdf_bytes), 
+        as_attachment=True, 
+        download_name=f'Recibo_Marichuy_Pedido_{order.id}.pdf', 
+        mimetype='application/pdf'
+    )
 
 @main.route('/profile')
 @login_required
