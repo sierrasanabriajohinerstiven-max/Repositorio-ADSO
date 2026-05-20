@@ -1,0 +1,2 @@
+Este archivo activa la limpieza de la base de datos al próximo arranque.
+Se elimina automáticamente después de la limpieza.
