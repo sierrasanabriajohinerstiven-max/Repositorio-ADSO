@@ -70,10 +70,10 @@
 
                         <!-- Notifications Dropdown -->
                         <li class="nav-item dropdown notification-dropdown">
-                            <a class="nav-link dropdown-toggle position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notifDropdown">
-                                <i class="fa-solid fa-bell"></i>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notifDropdown">
+                                <i class="fa-solid fa-bell"></i> Notificaciones
                                 {% if unread > 0 %}
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                    <span class="badge rounded-pill bg-danger" style="font-size: 0.65rem; margin-left: 5px; vertical-align: top;">
                                         {{ unread }}
                                     </span>
                                 {% endif %}
