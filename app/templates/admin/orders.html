@@ -41,6 +41,9 @@
                     </td>
                     <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                     <td class="d-flex gap-2 justify-content-center">
+                        <button type="button" onclick="showAddressModal('{{ order.shipping_address|replace('\n', ' ')|replace("'", "\\'")|escape }}')" class="btn btn-sm btn-outline-warning" title="Ver Dirección de Envío">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </button>
                         {% if order.payment_proof %}
                         <button type="button" onclick="showProofModal('{{ url_for('admin.view_proof', order_id=order.id) }}')" class="btn btn-sm btn-outline-info" title="Ver Comprobante">
                             <i class="fa-solid fa-image"></i>
@@ -85,5 +88,29 @@ function showProofModal(imageUrl) {
     var myModal = new bootstrap.Modal(document.getElementById('proofModal'));
     myModal.show();
 }
+
+function showAddressModal(address) {
+    document.getElementById('addressText').innerText = address || 'No hay dirección registrada';
+    var myModal = new bootstrap.Modal(document.getElementById('addressModal'));
+    myModal.show();
+}
 </script>
+
+<!-- Modal para Ver Dirección -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark border-warning">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title text-warning" id="addressModalLabel"><i class="fa-solid fa-map-location-dot"></i> Dirección de Envío</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center p-4">
+        <p id="addressText" class="text-bone fs-5 mb-0"></p>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
