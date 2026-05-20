@@ -229,30 +229,21 @@ def generate_receipt(order, cart_items):
     c.drawCentredString(center_x, y_footer - 30, "En Marichuy agradecemos tu confianza y apoyo.")
     c.drawCentredString(center_x, y_footer - 45, "Tu pedido será preparado con mucho amor. 🍫")
     
-    # Cajas inferiores centradas simétricamente
+    # Caja de Contacto (centrada)
     y_contact = y_footer - 130
-    contact_box_width = 210
-    gap = 30
-    left_box_x = center_x - contact_box_width - (gap / 2)
-    right_box_x2 = center_x + (gap / 2)
+    contact_box_width = 260
+    box_x = center_x - (contact_box_width / 2)
     
     c.setFillColor(light_brown)
-    c.roundRect(left_box_x, y_contact, contact_box_width, 55, 10, fill=1, stroke=0)
-    c.setFillColor(dark_brown)
-    c.setFont("Helvetica-Bold", 10)
-    c.drawCentredString(left_box_x + contact_box_width / 2, y_contact + 38, "¿Necesitas ayuda?")
-    c.setFont("Helvetica", 9)
-    c.drawCentredString(left_box_x + contact_box_width / 2, y_contact + 22, "Email: hola@marichuy.com")
-    c.drawCentredString(left_box_x + contact_box_width / 2, y_contact + 8, "IG: @marichuy.chocolates")
+    c.roundRect(box_x, y_contact - 15, contact_box_width, 75, 10, fill=1, stroke=0)
     
-    c.setFillColor(light_brown)
-    c.roundRect(right_box_x2, y_contact, contact_box_width, 55, 10, fill=1, stroke=0)
     c.setFillColor(dark_brown)
-    c.setFont("Helvetica-Bold", 10)
-    c.drawCentredString(right_box_x2 + contact_box_width / 2, y_contact + 38, "Instrucciones de pago (Nequi)")
-    c.setFont("Helvetica", 9)
-    c.drawCentredString(right_box_x2 + contact_box_width / 2, y_contact + 22, "Envía el comprobante a nuestro")
-    c.drawCentredString(right_box_x2 + contact_box_width / 2, y_contact + 8, "contacto para confirmar tu pedido.")
+    c.setFont("Helvetica-Bold", 11)
+    c.drawCentredString(center_x, y_contact + 42, "¿Necesitas ayuda?")
+    c.setFont("Helvetica", 10)
+    c.drawCentredString(center_x, y_contact + 24, "WhatsApp: 3186713936")
+    c.drawCentredString(center_x, y_contact + 9, "Email: hola@marichuy.com")
+    c.drawCentredString(center_x, y_contact - 6, "IG: @marichuy.chocolates")
     
     # Guardar
     c.showPage()
