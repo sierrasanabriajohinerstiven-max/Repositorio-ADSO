@@ -51,11 +51,11 @@ if __name__ == '__main__':
             except ImportError:
                 # Fallback si no se puede importar seed_db
                 product = Product(
-                    name="Trufas Artesanales Premium",
-                    description="Deliciosas trufas hechas a mano con el mejor cacao colombiano, rellenas de ganache suave y cubiertas con polvo de cacao puro. Perfectas para regalar o disfrutar en momentos especiales.",
-                    price=25000.0,
-                    stock=50,
-                    image_file="trufas.jpg"
+                    name="Chocolate Marichuy 100% Cacao (Sin Azúcar)",
+                    description="Presentación de 125 gramos. 100% Natural, puro cacao sin azúcar. Una pastilla de cacao por cada taza de agua o leche, panela al gusto. *Nota: El precio está sujeto a cambios dependiendo del comportamiento del mercado del cacao.*",
+                    price=12000.0,
+                    stock=100,
+                    image_file="cacao_125g.png"
                 )
                 db.session.add(product)
                 db.session.commit()

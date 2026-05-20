@@ -13,21 +13,21 @@ with app.app_context():
         db.session.add(admin_user)
     
     # Crear producto
-    truffles = Product.query.filter_by(name='Trufas Artesanales Premium').first()
-    if not truffles:
-        truffles = Product(
+    chocolate = Product.query.filter_by(name='Chocolate Marichuy 100% Cacao (Sin Azúcar)').first()
+    if not chocolate:
+        chocolate = Product(
             # pyrefly: ignore [unexpected-keyword]
-            name='Trufas Artesanales Premium',
+            name='Chocolate Marichuy 100% Cacao (Sin Azúcar)',
             # pyrefly: ignore [unexpected-keyword]
-            description='Una exquisita selección de trufas rellenas de ganache oscuro, elaboradas con el mejor cacao y un toque de licor, espolvoreadas con polvo de oro comestible. Perfecto para regalar.',
+            description='Presentación de 125 gramos. 100% Natural, puro cacao sin azúcar. Una pastilla de cacao por cada taza de agua o leche, panela al gusto. *Nota: El precio está sujeto a cambios dependiendo del comportamiento del mercado del cacao.*',
             # pyrefly: ignore [unexpected-keyword]
-            price=25000.0,
+            price=12000.0,
             # pyrefly: ignore [unexpected-keyword]
-            stock=50,
+            stock=100,
             # pyrefly: ignore [unexpected-keyword]
-            image_file='truffles.png'
+            image_file='cacao_125g.png'
         )
-        db.session.add(truffles)
+        db.session.add(chocolate)
     
     db.session.commit()
     print("Database seeded successfully!")
