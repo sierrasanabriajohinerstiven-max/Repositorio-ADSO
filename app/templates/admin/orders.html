@@ -13,6 +13,7 @@
                     <th>Método</th>
                     <th>Estado</th>
                     <th>Fecha</th>
+                    <th>Teléfono</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -40,6 +41,7 @@
                         </form>
                     </td>
                     <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ order.phone_number }}</td>
                     <td class="d-flex gap-2 justify-content-center">
                         <button type="button" onclick="showAddressModal('{{ order.shipping_address|replace('\n', ' ')|replace("'", "\\'")|escape }}')" class="btn btn-sm btn-outline-warning" title="Ver Dirección de Envío">
                             <i class="fa-solid fa-map-location-dot"></i>
