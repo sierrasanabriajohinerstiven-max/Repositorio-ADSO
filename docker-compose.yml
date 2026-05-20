@@ -5,9 +5,14 @@ services:
     build: .
     ports:
       - "5000:5000"
+    volumes:
+      - instance_data:/app/instance
     environment:
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_DEBUG=1
     env_file:
       - .env
     restart: unless-stopped
+
+volumes:
+  instance_data:

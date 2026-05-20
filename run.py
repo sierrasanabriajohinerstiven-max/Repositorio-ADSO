@@ -40,6 +40,26 @@ if __name__ == '__main__':
                 f.write('cleaned')
             
             print("=== Limpieza completada exitosamente ===")
+            
+        # Si no hay productos, crear el producto por defecto automáticamente
+        from app.models.product import Product
+        if Product.query.count() == 0:
+            print("=== Base de datos vacía. Sembrando productos iniciales ===")
+            try:
+                import seed_db
+                print("=== Productos sembrados ===")
+            except ImportError:
+                # Fallback si no se puede importar seed_db
+                product = Product(
+                    name="Trufas Artesanales Premium",
+                    description="Deliciosas trufas hechas a mano con el mejor cacao colombiano, rellenas de ganache suave y cubiertas con polvo de cacao puro. Perfectas para regalar o disfrutar en momentos especiales.",
+                    price=25000.0,
+                    stock=50,
+                    image_file="trufas.jpg"
+                )
+                db.session.add(product)
+                db.session.commit()
+                print("=== Producto por defecto creado ===")
     
     host = os.environ.get('FLASK_RUN_HOST', '0.0.0.0')
     debug = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true', '1', 't']
