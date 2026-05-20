@@ -14,24 +14,9 @@ if __name__ == '__main__':
             if db_dir:
                 os.makedirs(db_dir, exist_ok=True)
         
+        # Crea las tablas de la base de datos si no existen
         db.create_all()
-
-        # === LIMPIEZA ÚNICA DE BASE DE DATOS ===
-        from app.models.user import User
-        from app.models.order import Order, OrderItem
-        from app.models.product import Product
-
-        OrderItem.query.delete()
-        Order.query.delete()
-        User.query.delete()
-
-        admin = User(username='admin', email='marichuyy.m.a@gmail.com', is_admin=True)
-        admin.set_password('12872sierra')
-        db.session.add(admin)
-        db.session.commit()
-
-        print(f"=== DB limpia. Admin: {admin.email}, Productos: {Product.query.count()}")
-        # === FIN LIMPIEZA ===
+        print("=== Database tables created successfully!")
     
     host = os.environ.get('FLASK_RUN_HOST', '0.0.0.0')
     debug = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true', '1', 't']
