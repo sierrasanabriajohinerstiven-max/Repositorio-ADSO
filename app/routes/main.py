@@ -17,11 +17,13 @@ def index():
     return render_template('main/index.html', products=products)
 
 @main.route('/product/<int:product_id>')
+@login_required
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('main/product_detail.html', product=product)
 
 @main.route('/add_to_cart/<int:product_id>', methods=['POST'])
+@login_required
 def add_to_cart(product_id):
     product = Product.query.get_or_404(product_id)
     quantity = int(request.form.get('quantity', 1))
@@ -46,12 +48,14 @@ def add_to_cart(product_id):
     return redirect(request.referrer or url_for('main.index'))
 
 @main.route('/cart')
+@login_required
 def cart():
     cart_items = session.get('cart', {})
     total = sum(item['price'] * item['quantity'] for item in cart_items.values())
     return render_template('main/cart.html', cart_items=cart_items, total=total)
 
 @main.route('/remove_from_cart/<product_id>')
+@login_required
 def remove_from_cart(product_id):
     if 'cart' in session and product_id in session['cart']:
         del session['cart'][product_id]
@@ -60,6 +64,7 @@ def remove_from_cart(product_id):
     return redirect(url_for('main.cart'))
 
 @main.route('/update_cart/<product_id>', methods=['POST'])
+@login_required
 def update_cart(product_id):
     if 'cart' in session and product_id in session['cart']:
         quantity = int(request.form.get('quantity', 1))

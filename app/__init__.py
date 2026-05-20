@@ -20,8 +20,8 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 login = LoginManager()
 login.login_view = 'auth.login'
-login.login_message = 'Por favor inicia sesión para acceder a esta página.'
-login.login_message_category = 'info'
+login.login_message = 'Necesita iniciar sesión para acceder al catálogo y carrito.'
+login.login_message_category = 'warning'
 csrf = CSRFProtect()
 mail = Mail()
 
