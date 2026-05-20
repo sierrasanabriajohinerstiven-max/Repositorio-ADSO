@@ -1,5 +1,12 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# Zona horaria de Colombia (UTC-5)
+COLOMBIA_TZ = timezone(timedelta(hours=-5))
+
+def colombia_now():
+    """Retorna la fecha y hora exacta de Colombia (UTC-5) sin depender del timezone del servidor."""
+    return datetime.utcnow() - timedelta(hours=5)
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,7 +19,7 @@ class Order(db.Model):
     customer_name = db.Column(db.String(100), nullable=True)
     customer_email = db.Column(db.String(120), nullable=True)
     payment_proof = db.Column(db.String(255), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=colombia_now)
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
     def __repr__(self):

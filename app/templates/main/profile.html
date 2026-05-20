@@ -46,7 +46,7 @@
                                 <span class="badge bg-warning text-dark">Pendiente</span>
                                 {% endif %}
                             </td>
-                            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                         </tr>
                         {% else %}
                         <tr><td colspan="5" class="text-center text-bone">Aún no has realizado ningún pedido.</td></tr>
