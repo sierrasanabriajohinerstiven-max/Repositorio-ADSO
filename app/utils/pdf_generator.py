@@ -121,14 +121,8 @@ def generate_receipt(order, cart_items):
     c.setFillColor(dark_brown)
     c.drawCentredString(box_x + box_width / 2, box_y + box_height - 72, "Estado del pago:")
     
-    # Color del estado
-    status_color = HexColor("#B71C1C")  # Rojo por defecto
-    if order.status == 'Pedido entregado':
-        status_color = HexColor("#2E7D32")
-    elif order.status == 'Pedido en camino':
-        status_color = HexColor("#F57F17")
-    elif order.status == 'Preparando tu pedido':
-        status_color = HexColor("#1565C0")
+    # Color del estado (igual a las otras letras)
+    status_color = dark_brown
     
     c.setFillColor(status_color)
     c.setFont("Helvetica-Bold", 10)
@@ -235,15 +229,14 @@ def generate_receipt(order, cart_items):
     box_x = center_x - (contact_box_width / 2)
     
     c.setFillColor(light_brown)
-    c.roundRect(box_x, y_contact - 15, contact_box_width, 75, 10, fill=1, stroke=0)
+    c.roundRect(box_x, y_contact - 15, contact_box_width, 65, 10, fill=1, stroke=0)
     
     c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 11)
-    c.drawCentredString(center_x, y_contact + 42, "¿Necesitas ayuda?")
+    c.drawCentredString(center_x, y_contact + 32, "¿Necesitas ayuda?")
     c.setFont("Helvetica", 10)
-    c.drawCentredString(center_x, y_contact + 24, "WhatsApp: 3186713936")
-    c.drawCentredString(center_x, y_contact + 9, "Email: hola@marichuy.com")
-    c.drawCentredString(center_x, y_contact - 6, "IG: @marichuy.chocolates")
+    c.drawCentredString(center_x, y_contact + 12, "WhatsApp: 3186713936")
+    c.drawCentredString(center_x, y_contact - 3, "Email: marichuyy.m.a@gmail.com")
     
     # Guardar
     c.showPage()
