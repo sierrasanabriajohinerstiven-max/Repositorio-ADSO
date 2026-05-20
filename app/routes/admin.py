@@ -107,6 +107,7 @@ def update_order_status(order_id):
     new_status = request.form.get('status')
     
     valid_statuses = [
+        'Verificando pedido',
         'Preparando tu pedido',
         'Pedido en camino',
         'Pedido entregado',
@@ -120,6 +121,7 @@ def update_order_status(order_id):
             
             # Mensajes de notificación personalizados según estado
             notification_messages = {
+                'Verificando pedido': f'Tu pedido #{order.id} está siendo verificado. ¡Pronto tendrás novedades!',
                 'Preparando tu pedido': f'Tu pedido #{order.id} está en preparación. ¡Pronto estará listo!',
                 'Pedido en camino': f'Tu pedido #{order.id} ha sido enviado. ¡Va en camino!',
                 'Pedido entregado': f'Tu pedido #{order.id} ha sido entregado. ¡Disfrútalo!',
