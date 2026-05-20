@@ -3,6 +3,7 @@ import io
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
+from app.utils.timezone import format_datetime
 
 def generate_receipt(order, cart_items):
     buffer = io.BytesIO()
@@ -53,10 +54,10 @@ def generate_receipt(order, cart_items):
     c.drawString(120, y_info - 45, str(order.customer_email or order.customer.email))
     
     c.drawString(50, y_info - 65, "Fecha:")
-    c.drawString(120, y_info - 65, order.created_at.strftime('%Y-%m-%d %H:%M'))
+    c.drawString(120, y_info - 65, format_datetime(order.created_at))
     
     c.drawString(50, y_info - 85, "N° de pedido:")
-    c.drawString(120, y_info - 85, f"#MC-{order.created_at.strftime('%Y%m%d')}-{order.id:03d}")
+    c.drawString(120, y_info - 85, f"#MC-{format_datetime(order.created_at, '%Y%m%d')}-{order.id:03d}")
     
     # Columna Derecha (Método de Pago) - Caja con fondo
     c.setFillColor(light_brown)

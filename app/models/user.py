@@ -1,14 +1,7 @@
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timezone, timedelta
-
-# Zona horaria de Colombia (UTC-5)
-COLOMBIA_TZ = timezone(timedelta(hours=-5))
-
-def colombia_now():
-    """Retorna la fecha y hora exacta de Colombia (UTC-5) sin depender del timezone del servidor."""
-    return datetime.utcnow() - timedelta(hours=5)
+from app.utils.timezone import colombia_now
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

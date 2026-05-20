@@ -8,7 +8,7 @@
             <i class="fa-solid fa-circle-user fa-5x text-secondary mb-3"></i>
             <h4 class="text-bone">{{ current_user.username }}</h4>
             <p class="text-bone">{{ current_user.email }}</p>
-            <p class="badge bg-primary">Miembro desde {{ current_user.created_at.strftime('%B %Y') }}</p>
+            <p class="badge bg-primary">Miembro desde {{ current_user.created_at|format_datetime('%B %Y') }}</p>
         </div>
     </div>
     <div class="col-md-8">
@@ -46,7 +46,7 @@
                                 <span class="badge bg-warning text-dark">Pendiente</span>
                                 {% endif %}
                             </td>
-                            <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ order.created_at|format_datetime }}</td>
                         </tr>
                         {% else %}
                         <tr><td colspan="5" class="text-center text-bone">Aún no has realizado ningún pedido.</td></tr>

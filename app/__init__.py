@@ -43,6 +43,7 @@ def create_app(config_class=Config):
     login.init_app(app)
     csrf.init_app(app)
     mail.init_app(app)
+    app.add_template_filter(format_datetime)
 
     from app.routes.main import main as main_bp
     app.register_blueprint(main_bp)

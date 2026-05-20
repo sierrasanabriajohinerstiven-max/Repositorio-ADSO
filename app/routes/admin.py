@@ -4,6 +4,7 @@ from app import db
 from app.models.product import Product
 from app.models.order import Order
 from app.models.user import User
+from app.utils.timezone import format_datetime
 from functools import wraps
 
 admin = Blueprint('admin', __name__)
@@ -130,7 +131,7 @@ def api_clients():
         'username': u.username,
         'email': u.email,
         'order_count': u.orders.count(),
-        'created_at': u.created_at.strftime('%Y-%m-%d %H:%M')
+        'created_at': format_datetime(u.created_at)
     } for u in users])
 
 @admin.route('/clients/delete/<int:user_id>', methods=['POST'])

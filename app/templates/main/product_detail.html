@@ -36,9 +36,9 @@
                             }
                         </style>
                         <div class="input-group" style="width: 140px;">
-                            <button class="btn btn-outline-warning" type="button" onclick="const q=document.getElementById('quantity'); if(q.value>0)q.value--;"><i class="fa-solid fa-minus"></i></button>
-                            <input type="number" id="quantity" name="quantity" class="form-control bg-dark text-light border-warning text-center no-spin" value="1" min="0" max="{{ product.stock if product.stock > 0 else 1 }}">
-                            <button class="btn btn-outline-warning" type="button" onclick="const q=document.getElementById('quantity'); if(q.value<q.max)q.value++;"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn btn-outline-warning" type="button" onclick="const q=document.getElementById('quantity'); const current = Number(q.value); if(current > 1) q.value = current - 1;"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="quantity" name="quantity" class="form-control bg-dark text-light border-warning text-center no-spin" value="1" min="1" max="{{ product.stock if product.stock > 0 else 1 }}">
+                            <button class="btn btn-outline-warning" type="button" onclick="const q=document.getElementById('quantity'); const current = Number(q.value); const max = Number(q.max); if(current < max) q.value = current + 1;"><i class="fa-solid fa-plus"></i></button>
                         </div>
                     </div>
                 </div>
