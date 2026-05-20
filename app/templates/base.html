@@ -67,8 +67,60 @@
                             <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard Admin</a>
                         </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.profile') }}">Mi Perfil</a>
+
+                        <!-- Notifications Dropdown -->
+                        <li class="nav-item dropdown notification-dropdown">
+                            <a class="nav-link dropdown-toggle position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notifDropdown">
+                                <i class="fa-solid fa-bell"></i>
+                                {% if unread > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                        {{ unread }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark p-0" aria-labelledby="notifDropdown">
+                                <li class="p-3 text-center border-bottom border-secondary bg-dark">
+                                    <h6 class="mb-0 text-warning">Notificaciones</h6>
+                                </li>
+                                <div class="notif-scroll-area">
+                                    {% if recent_notifications %}
+                                        {% for n in recent_notifications %}
+                                        <li class="p-3 border-bottom border-secondary {% if not n.is_read %}bg-secondary bg-opacity-25{% endif %}">
+                                            <p class="mb-1 text-bone" style="font-size: 0.9rem;">
+                                                {% if n.is_read %}<s>{% endif %}
+                                                {{ n.message }}
+                                                {% if n.is_read %}</s>{% endif %}
+                                            </p>
+                                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                                <small class="text-muted" style="font-size: 0.75rem;">{{ n.created_at|format_datetime }}</small>
+                                                {% if not n.is_read %}
+                                                <form method="post" action="{{ url_for('main.read_notification', notif_id=n.id) }}" class="m-0">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-link text-warning p-0 text-decoration-none" style="font-size: 0.8rem;">Marcar leída</button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li class="p-4 text-center text-muted">
+                                            <i class="fa-regular fa-bell-slash fs-3 mb-2"></i>
+                                            <p class="mb-0 small">No tienes notificaciones</p>
+                                        </li>
+                                    {% endif %}
+                                </div>
+                                <li class="p-2 text-center bg-dark rounded-bottom">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ url_for('main.profile') }}" class="btn btn-sm btn-outline-warning">Ver todas</a>
+                                        {% if recent_notifications %}
+                                        <form method="post" action="{{ url_for('main.clear_notifications') }}" class="m-0">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Limpiar</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">

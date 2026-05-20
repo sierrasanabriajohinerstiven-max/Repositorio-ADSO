@@ -39,8 +39,8 @@
                                 {% endif %}
                             </td>
                             <td>
-{% if order.status == 'Pedido Entregado' %}
-    <span class="badge bg-success">Pedido Entregado</span>
+{% if order.status == 'Pedido entregado' %}
+    <span class="badge bg-success">Pedido entregado</span>
 {% elif order.status == 'Pedido en camino' %}
     <span class="badge bg-warning text-dark">Pedido en camino</span>
 {% elif order.status == 'Preparando tu pedido' %}
@@ -65,4 +65,24 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% if notifications %}
+    <div class="card p-3 mb-4">
+        <h5 class="text-warning">Notificaciones</h5>
+        <ul class="list-group">
+            {% for n in notifications %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {% if n.is_read %}<s>{% endif %}{{ n.message }}{% if n.is_read %}</s>{% endif %}
+                {% if not n.is_read %}
+                <form method="post" action="{{ url_for('main.read_notification', notif_id=n.id) }}" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Marcar como leída</button>
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        <form method="post" action="{{ url_for('main.clear_notifications') }}" class="mt-2">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Limpiar todas</button>
+        </form>
+    </div>
+    {% endif %}
+    {% endblock %}

@@ -211,14 +211,22 @@ def profile():
     notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
     return render_template('main/profile.html', orders=user_orders, notifications=notifications)
 
+@main.route('/notification/read/<int:notif_id>', methods=['POST'])
+@login_required
+def read_notification(notif_id):
+    notif = Notification.query.filter_by(id=notif_id, user_id=current_user.id).first_or_404()
+    notif.is_read = True
+    db.session.commit()
+    flash('Notificación marcada como leída.', 'success')
+    return redirect(url_for('main.profile'))
+
 @main.route('/clear_notifications', methods=['POST'])
 @login_required
 def clear_notifications():
-    from app.models.notification import Notification
-    from app import db
+    # Delete all notifications for the current user
     Notification.query.filter_by(user_id=current_user.id).delete()
     db.session.commit()
-    flash('Notificaciones limpiadas.', 'success')
+    flash('Todas las notificaciones fueron eliminadas.', 'success')
     return redirect(url_for('main.profile'))
 
 @main.route('/download_qr')

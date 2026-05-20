@@ -286,3 +286,34 @@ img, .img-fluid, .card, .table, .table-responsive, .navbar, .footer-custom, .con
         margin-bottom: 1rem;
     }
 }
+
+/* Notificaciones Dropdown */
+.notification-dropdown .dropdown-menu {
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    border: 1px solid var(--accent-gold);
+}
+
+.notif-scroll-area {
+    max-height: 350px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-gold) #1e1e1e;
+}
+
+.notif-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notif-scroll-area::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.notif-scroll-area::-webkit-scrollbar-thumb {
+    background-color: var(--accent-gold);
+    border-radius: 10px;
+}
+
+.notification-dropdown .dropdown-toggle::after {
+    display: none;
+}

@@ -56,4 +56,16 @@ def create_app(config_class=Config):
     from app.routes.admin import admin as admin_bp
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
+    # Context processor para inyectar notificaciones en todos los templates
+    @app.context_processor
+    def inject_notifications():
+        from flask_login import current_user as ctx_user
+        if ctx_user.is_authenticated and not ctx_user.is_admin:
+            from app.models.notification import Notification
+            unread = Notification.query.filter_by(user_id=ctx_user.id, is_read=False).count()
+            recent_notifications = Notification.query.filter_by(user_id=ctx_user.id)\
+                .order_by(Notification.created_at.desc()).limit(10).all()
+            return dict(unread=unread, recent_notifications=recent_notifications)
+        return dict(unread=0, recent_notifications=[])
+
     return app

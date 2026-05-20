@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, abort
 from flask_login import login_required, current_user
-from app import db
+from app import db, mail
 from app.models.product import Product
 from app.models.order import Order
 from app.models.user import User
@@ -95,26 +95,140 @@ def delete_product(product_id):
     flash('Producto eliminado.', 'success')
     return redirect(url_for('admin.products'))
 
+
+# ─────────────────────────────────────────────────────────────
+# Actualizar estado del pedido (con notificación + correo)
+# ─────────────────────────────────────────────────────────────
 @admin.route('/orders/update_status/<int:order_id>', methods=['POST'])
 @login_required
 @admin_required
 def update_order_status(order_id):
     order = Order.query.get_or_404(order_id)
     new_status = request.form.get('status')
-    if new_status in ['Preparando tu pedido', 'Pedido en camino', 'Pedido Entregado', 'Cancelado']:
+    
+    valid_statuses = [
+        'Preparando tu pedido',
+        'Pedido en camino',
+        'Pedido entregado',
+        'Cancelado'
+    ]
+    
+    if new_status in valid_statuses:
         if order.status != new_status:
+            old_status = order.status
             order.status = new_status
+            
+            # Mensajes de notificación personalizados según estado
+            notification_messages = {
+                'Preparando tu pedido': f'Tu pedido #{order.id} está en preparación. ¡Pronto estará listo!',
+                'Pedido en camino': f'Tu pedido #{order.id} ha sido enviado. ¡Va en camino!',
+                'Pedido entregado': f'Tu pedido #{order.id} ha sido entregado. ¡Disfrútalo!',
+                'Cancelado': f'Tu pedido #{order.id} ha sido cancelado.'
+            }
             
             # Crear notificación para el usuario
             notification = Notification(
                 user_id=order.user_id,
-                message=f"El estado de tu pedido #{order.id} se actualizó a: {new_status}"
+                message=notification_messages.get(new_status, f'El estado de tu pedido #{order.id} se actualizó a: {new_status}')
             )
             db.session.add(notification)
+            db.session.commit()
             
-        db.session.commit()
-        flash(f'Estado del pedido #{order.id} actualizado a {new_status}.', 'success')
+            # Enviar correo automático al cliente
+            try:
+                from app.utils.email_service import send_status_email
+                customer_email = order.customer_email or order.customer.email
+                customer_name = order.customer_name or order.customer.username
+                send_status_email(order, new_status, customer_email, customer_name)
+            except Exception as e:
+                print(f"Error enviando correo de estado: {e}")
+            
+            flash(f'Estado del pedido #{order.id} actualizado a "{new_status}".', 'success')
+        else:
+            flash(f'El pedido #{order.id} ya tiene el estado "{new_status}".', 'info')
+    else:
+        flash('Estado no válido.', 'danger')
+    
     return redirect(url_for('admin.orders'))
+
+
+# ─────────────────────────────────────────────────────────────
+# Confirmar pago (enviar correo con PDF adjunto)
+# ─────────────────────────────────────────────────────────────
+@admin.route('/orders/confirm_payment/<int:order_id>', methods=['POST'])
+@login_required
+@admin_required
+def confirm_payment(order_id):
+    order = Order.query.get_or_404(order_id)
+    user = User.query.get(order.user_id)
+    if not user or not user.email:
+        flash('No se encontró correo del cliente.', 'warning')
+        return redirect(url_for('admin.orders'))
+    
+    # Build email
+    from flask_mail import Message
+    from flask import current_app
+    import os
+    
+    msg = Message(
+        subject='Comprobante de pago confirmado',
+        sender=current_app.config.get('MAIL_DEFAULT_SENDER', 'marichuyy.m.a@gmail.com'),
+        recipients=[user.email]
+    )
+    msg.body = (
+        f"Hola {user.username},\n\n"
+        f"Tu pago para el pedido #{order.id} ha sido verificado y confirmado. "
+        f"Adjuntamos el comprobante de pago para tu referencia.\n\n"
+        f"Gracias por confiar en Marichuy.\n\n"
+        f"Saludos,\nEquipo Marichuy"
+    )
+    
+    # Attach PDF receipt if exists
+    receipt_path = os.path.join(current_app.instance_path, f'receipts/receipt_{order.id}.pdf')
+    if os.path.exists(receipt_path):
+        with open(receipt_path, 'rb') as f:
+            msg.attach(f'recibo_{order.id}.pdf', 'application/pdf', f.read())
+    
+    try:
+        mail.send(msg)
+        flash('Correo de confirmación enviado al cliente.', 'success')
+    except Exception as e:
+        print(f"Error enviando correo de confirmación: {e}")
+        flash('Error al enviar el correo de confirmación.', 'danger')
+    
+    return redirect(url_for('admin.orders'))
+
+
+# ─────────────────────────────────────────────────────────────
+# Reenviar correo de verificación del comprobante
+# ─────────────────────────────────────────────────────────────
+@admin.route('/orders/resend_verification/<int:order_id>', methods=['POST'])
+@login_required
+@admin_required
+def resend_verification_email(order_id):
+    order = Order.query.get_or_404(order_id)
+    user = User.query.get(order.user_id)
+    
+    if not user or not user.email:
+        flash('No se encontró correo del cliente.', 'warning')
+        return redirect(url_for('admin.orders'))
+    
+    if not order.payment_proof:
+        flash('Este pedido no tiene comprobante de pago adjunto.', 'warning')
+        return redirect(url_for('admin.orders'))
+    
+    try:
+        from app.utils.email_service import send_verification_confirmed_email
+        customer_email = order.customer_email or user.email
+        customer_name = order.customer_name or user.username
+        send_verification_confirmed_email(order, customer_email, customer_name)
+        flash(f'Correo de verificación reenviado al cliente para el pedido #{order.id}.', 'success')
+    except Exception as e:
+        print(f"Error reenviando correo de verificación: {e}")
+        flash('Error al enviar el correo de verificación.', 'danger')
+    
+    return redirect(url_for('admin.orders'))
+
 
 @admin.route('/orders/delete/<int:order_id>', methods=['POST'])
 @login_required

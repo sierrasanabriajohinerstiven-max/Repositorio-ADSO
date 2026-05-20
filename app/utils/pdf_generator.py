@@ -9,6 +9,7 @@ def generate_receipt(order, cart_items):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
+    center_x = width / 2.0
     
     # --- COLORES ---
     bg_color = HexColor("#FCF8F2")
@@ -16,8 +17,11 @@ def generate_receipt(order, cart_items):
     light_brown = HexColor("#EFEBE4")
     accent_brown = HexColor("#8D6E63")
     bone_color = HexColor("#EAE0C8")
+    gold = HexColor("#d4af37")
     
-    # 1. Fondo de la página
+    # ──────────────────────────────────────────────
+    # 1. FONDO DE LA PÁGINA
+    # ──────────────────────────────────────────────
     c.setFillColor(bg_color)
     c.rect(0, 0, width, height, fill=1, stroke=0)
     
@@ -25,140 +29,230 @@ def generate_receipt(order, cart_items):
     if os.path.exists(bg_path):
         c.drawImage(bg_path, 0, 0, width=width, height=height, preserveAspectRatio=False)
 
-    
-    # 2. LOGO / TÍTULO PRINCIPAL
+    # ──────────────────────────────────────────────
+    # 2. ENCABEZADO CENTRADO
+    # ──────────────────────────────────────────────
+    # Logo / Marca
     c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 36)
-    c.drawCentredString(width / 2.0, height - 80, "MARICHUY")
+    c.drawCentredString(center_x, height - 75, "MARICHUY")
     
-    c.setFont("Helvetica", 10)
+    c.setFont("Helvetica", 11)
     c.setFillColor(accent_brown)
-    c.drawCentredString(width / 2.0, height - 100, "CHOCOLATES QUE ENAMORAN")
+    c.drawCentredString(center_x, height - 95, "CHOCOLATES QUE ENAMORAN")
     
-    # Línea decorativa
+    # Líneas decorativas simétricas
+    c.setStrokeColor(gold)
+    c.setLineWidth(1.5)
+    c.line(80, height - 115, width - 80, height - 115)
     c.setStrokeColor(accent_brown)
-    c.setLineWidth(1)
-    c.line(100, height - 130, width - 100, height - 130)
+    c.setLineWidth(0.5)
+    c.line(80, height - 118, width - 80, height - 118)
     
+    # Título del documento
     c.setFillColor(dark_brown)
-    c.setFont("Helvetica-Bold", 16)
-    c.drawCentredString(width / 2.0, height - 150, "RECIBO DE COMPRA")
-    
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(center_x, height - 145, "RECIBO DE COMPRA")
+
+    # ──────────────────────────────────────────────
     # 3. INFORMACIÓN DEL CLIENTE Y MÉTODO DE PAGO
-    y_info = height - 200
+    #    Distribuidos simétricamente
+    # ──────────────────────────────────────────────
+    y_info = height - 190
     
-    # Columna Izquierda (Cliente)
+    # Márgenes simétricos
+    left_margin = 60
+    right_box_x = center_x + 20
+    
+    # ── Columna Izquierda: Datos del Cliente ──
+    c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, y_info, "Información del cliente")
+    c.drawString(left_margin, y_info, "Información del cliente")
     
     c.setFont("Helvetica", 10)
-    c.drawString(50, y_info - 25, "Nombre:")
-    c.drawString(120, y_info - 25, str(order.customer_name or order.customer.username))
+    labels_left = left_margin
+    values_left = left_margin + 85
     
-    c.drawString(50, y_info - 45, "Correo:")
-    c.drawString(120, y_info - 45, str(order.customer_email or order.customer.email))
+    c.setFillColor(accent_brown)
+    c.drawString(labels_left, y_info - 25, "Nombre:")
+    c.setFillColor(dark_brown)
+    c.drawString(values_left, y_info - 25, str(order.customer_name or order.customer.username))
     
-    c.drawString(50, y_info - 65, "Fecha:")
-    c.drawString(120, y_info - 65, format_datetime(order.created_at))
+    c.setFillColor(accent_brown)
+    c.drawString(labels_left, y_info - 45, "Correo:")
+    c.setFillColor(dark_brown)
+    email_text = str(order.customer_email or order.customer.email)
+    # Truncar email si es muy largo
+    if len(email_text) > 30:
+        email_text = email_text[:28] + "..."
+    c.drawString(values_left, y_info - 45, email_text)
     
-    c.drawString(50, y_info - 85, "N° de pedido:")
-    c.drawString(120, y_info - 85, f"#MC-{format_datetime(order.created_at, '%Y%m%d')}-{order.id:03d}")
+    c.setFillColor(accent_brown)
+    c.drawString(labels_left, y_info - 65, "Fecha:")
+    c.setFillColor(dark_brown)
+    c.drawString(values_left, y_info - 65, format_datetime(order.created_at))
     
-    # Columna Derecha (Método de Pago) - Caja con fondo
+    c.setFillColor(accent_brown)
+    c.drawString(labels_left, y_info - 85, "N° de pedido:")
+    c.setFillColor(dark_brown)
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(values_left + 30, y_info - 85, f"#MC-{format_datetime(order.created_at, '%Y%m%d')}-{order.id:03d}")
+    
+    # ── Columna Derecha: Método de Pago (caja centrada) ──
+    box_width = 200
+    box_height = 100
+    box_x = right_box_x + 10
+    box_y = y_info - 90
+    
     c.setFillColor(light_brown)
     c.setStrokeColor(accent_brown)
-    c.roundRect(width - 250, y_info - 95, 200, 110, 10, fill=1, stroke=1)
+    c.setLineWidth(1)
+    c.roundRect(box_x, box_y, box_width, box_height, 10, fill=1, stroke=1)
     
     c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 12)
-    c.drawString(width - 230, y_info - 15, "Método de pago")
+    c.drawCentredString(box_x + box_width / 2, box_y + box_height - 22, "Método de pago")
     
-    c.setFont("Helvetica-Bold", 11)
-    c.drawString(width - 230, y_info - 40, order.payment_method.capitalize())
+    c.setFont("Helvetica-Bold", 13)
+    c.setFillColor(accent_brown)
+    c.drawCentredString(box_x + box_width / 2, box_y + box_height - 48, order.payment_method.capitalize())
     
     c.setFont("Helvetica", 10)
-    c.drawString(width - 230, y_info - 70, "Estado del pago:")
-    c.setFillColor(HexColor("#B71C1C")) # Rojo para pendiente
-    c.drawString(width - 130, y_info - 70, order.status)
+    c.setFillColor(dark_brown)
+    c.drawCentredString(box_x + box_width / 2, box_y + box_height - 72, "Estado del pago:")
     
-    # 4. TABLA DE PRODUCTOS
-    y_table = y_info - 140
+    # Color del estado
+    status_color = HexColor("#B71C1C")  # Rojo por defecto
+    if order.status == 'Pedido entregado':
+        status_color = HexColor("#2E7D32")
+    elif order.status == 'Pedido en camino':
+        status_color = HexColor("#F57F17")
+    elif order.status == 'Preparando tu pedido':
+        status_color = HexColor("#1565C0")
+    
+    c.setFillColor(status_color)
+    c.setFont("Helvetica-Bold", 10)
+    c.drawCentredString(box_x + box_width / 2, box_y + box_height - 88, order.status)
+
+    # ──────────────────────────────────────────────
+    # 4. TABLA DE PRODUCTOS (centrada y equilibrada)
+    # ──────────────────────────────────────────────
+    table_margin = 50
+    table_width = width - (table_margin * 2)
+    y_table = y_info - 130
+    
+    # Columnas distribuidas proporcionalmente
+    col_product_x = table_margin + 10
+    col_qty_x = table_margin + (table_width * 0.55)
+    col_unit_x = table_margin + (table_width * 0.72)
+    col_total_x = table_margin + (table_width * 0.90)
     
     # Encabezado de la tabla
     c.setFillColor(dark_brown)
-    c.rect(50, y_table - 20, width - 100, 25, fill=1, stroke=0)
+    c.rect(table_margin, y_table - 20, table_width, 28, fill=1, stroke=0)
     
     c.setFillColor(HexColor("#FFFFFF"))
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(60, y_table - 13, "PRODUCTO")
-    c.drawCentredString(320, y_table - 13, "CANTIDAD")
-    c.drawCentredString(420, y_table - 13, "PRECIO UNITARIO")
-    c.drawCentredString(520, y_table - 13, "TOTAL")
+    c.drawString(col_product_x, y_table - 13, "PRODUCTO")
+    c.drawCentredString(col_qty_x, y_table - 13, "CANT.")
+    c.drawCentredString(col_unit_x, y_table - 13, "P. UNITARIO")
+    c.drawCentredString(col_total_x, y_table - 13, "TOTAL")
     
     # Filas de la tabla
     y = y_table - 45
-    c.setFillColor(dark_brown)
-    c.setFont("Helvetica", 10)
     c.setStrokeColor(HexColor("#E0E0E0"))
+    c.setLineWidth(0.5)
     
     for p_id, item in cart_items.items():
-        c.drawString(60, y, str(item['name'])[:50])
-        c.drawCentredString(320, y, str(item['quantity']))
-        c.drawCentredString(420, y, f"${item['price']:,.2f}")
-        c.drawCentredString(520, y, f"${item['price'] * item['quantity']:,.2f}")
+        # Fondo alternado sutil
+        c.setFillColor(dark_brown)
+        c.setFont("Helvetica", 10)
+        
+        # Truncar nombre si es muy largo
+        product_name = str(item['name'])
+        if len(product_name) > 40:
+            product_name = product_name[:38] + "..."
+        
+        c.drawString(col_product_x, y, product_name)
+        c.drawCentredString(col_qty_x, y, str(item['quantity']))
+        c.drawCentredString(col_unit_x, y, f"${item['price']:,.2f}")
+        c.drawCentredString(col_total_x, y, f"${item['price'] * item['quantity']:,.2f}")
         
         # Línea separadora tenue
-        c.line(50, y - 10, width - 50, y - 10)
+        c.line(table_margin, y - 10, table_margin + table_width, y - 10)
         y -= 30
-        
-    # 5. TOTALES
+
+    # ──────────────────────────────────────────────
+    # 5. TOTALES (centrados a la derecha)
+    # ──────────────────────────────────────────────
     y -= 10
-    c.drawString(380, y, "Subtotal")
-    c.drawRightString(540, y, f"${order.total_amount:,.2f}")
-    
-    y -= 20
-    c.drawString(380, y, "Envío")
-    c.drawRightString(540, y, "$0.00")
-    
-    y -= 20
-    # Caja de TOTAL
-    c.setFillColor(light_brown)
-    c.rect(370, y - 15, 180, 30, fill=1, stroke=0)
-    c.setFillColor(dark_brown)
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(380, y - 5, "TOTAL")
-    c.drawRightString(540, y - 5, f"${order.total_amount:,.2f}")
-    
-    # 6. FOOTER Y MENSAJES
-    y_footer = y - 80
-    
-    # Caja de Agradecimiento
-    c.setFillColor(light_brown)
-    c.roundRect(50, y_footer - 60, width - 100, 70, 10, fill=1, stroke=1)
+    totals_label_x = col_unit_x - 20
+    totals_value_x = table_margin + table_width - 10
     
     c.setFillColor(dark_brown)
-    c.setFont("Helvetica-Oblique", 14)
-    c.drawString(70, y_footer - 20, "¡Gracias por tu compra!")
+    c.setFont("Helvetica", 11)
+    c.drawRightString(totals_label_x + 40, y, "Subtotal")
+    c.drawRightString(totals_value_x, y, f"${order.total_amount:,.2f}")
+    
+    y -= 22
+    c.drawRightString(totals_label_x + 40, y, "Envío")
+    c.drawRightString(totals_value_x, y, "$0.00")
+    
+    y -= 25
+    # Caja de TOTAL centrada
+    total_box_width = 220
+    total_box_x = totals_value_x - total_box_width + 10
+    c.setFillColor(dark_brown)
+    c.roundRect(total_box_x, y - 15, total_box_width, 32, 6, fill=1, stroke=0)
+    c.setFillColor(gold)
+    c.setFont("Helvetica-Bold", 15)
+    c.drawString(total_box_x + 15, y - 5, "TOTAL")
+    c.setFillColor(HexColor("#FFFFFF"))
+    c.drawRightString(total_box_x + total_box_width - 15, y - 5, f"${order.total_amount:,.2f}")
+
+    # ──────────────────────────────────────────────
+    # 6. FOOTER CENTRADO
+    # ──────────────────────────────────────────────
+    y_footer = y - 60
+    
+    # Caja de Agradecimiento (centrada)
+    thanks_width = width - 100
+    thanks_x = (width - thanks_width) / 2
+    c.setFillColor(light_brown)
+    c.setStrokeColor(accent_brown)
+    c.roundRect(thanks_x, y_footer - 55, thanks_width, 65, 10, fill=1, stroke=1)
+    
+    c.setFillColor(dark_brown)
+    c.setFont("Helvetica-Oblique", 15)
+    c.drawCentredString(center_x, y_footer - 10, "¡Gracias por tu compra!")
     c.setFont("Helvetica", 10)
-    c.drawString(70, y_footer - 40, "En Marichuy agradecemos tu confianza y apoyo.")
-    c.drawString(70, y_footer - 55, "Tu pedido será preparado con mucho amor.")
+    c.drawCentredString(center_x, y_footer - 30, "En Marichuy agradecemos tu confianza y apoyo.")
+    c.drawCentredString(center_x, y_footer - 45, "Tu pedido será preparado con mucho amor. 🍫")
     
-    # Cajas inferiores de contacto e instrucciones
-    y_contact = y_footer - 150
+    # Cajas inferiores centradas simétricamente
+    y_contact = y_footer - 130
+    contact_box_width = 210
+    gap = 30
+    left_box_x = center_x - contact_box_width - (gap / 2)
+    right_box_x2 = center_x + (gap / 2)
     
-    c.roundRect(50, y_contact, 200, 70, 10, fill=1, stroke=0)
+    c.setFillColor(light_brown)
+    c.roundRect(left_box_x, y_contact, contact_box_width, 55, 10, fill=1, stroke=0)
+    c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(60, y_contact + 50, "¿Necesitas ayuda?")
+    c.drawCentredString(left_box_x + contact_box_width / 2, y_contact + 38, "¿Necesitas ayuda?")
     c.setFont("Helvetica", 9)
-    c.drawString(60, y_contact + 30, "Email: hola@marichuy.com")
-    c.drawString(60, y_contact + 15, "IG: @marichuy.chocolates")
+    c.drawCentredString(left_box_x + contact_box_width / 2, y_contact + 22, "Email: hola@marichuy.com")
+    c.drawCentredString(left_box_x + contact_box_width / 2, y_contact + 8, "IG: @marichuy.chocolates")
     
-    c.roundRect(width - 250, y_contact, 200, 70, 10, fill=1, stroke=0)
+    c.setFillColor(light_brown)
+    c.roundRect(right_box_x2, y_contact, contact_box_width, 55, 10, fill=1, stroke=0)
+    c.setFillColor(dark_brown)
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(width - 240, y_contact + 50, "Instrucciones de pago (Nequi)")
+    c.drawCentredString(right_box_x2 + contact_box_width / 2, y_contact + 38, "Instrucciones de pago (Nequi)")
     c.setFont("Helvetica", 9)
-    c.drawString(width - 240, y_contact + 30, "Por favor envía el comprobante a nuestro")
-    c.drawString(width - 240, y_contact + 15, "contacto para confirmar tu pedido.")
+    c.drawCentredString(right_box_x2 + contact_box_width / 2, y_contact + 22, "Envía el comprobante a nuestro")
+    c.drawCentredString(right_box_x2 + contact_box_width / 2, y_contact + 8, "contacto para confirmar tu pedido.")
     
     # Guardar
     c.showPage()
