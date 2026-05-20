@@ -78,13 +78,6 @@
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Cerrar Sesión</a></li>
                             </ul>
                         </li>
-                    {% else %}
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-outline-custom" href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-primary-custom" href="{{ url_for('auth.register') }}">Registrarse</a>
-                        </li>
                     {% endif %}
                 </ul>
             </div>
