@@ -15,7 +15,7 @@ def send_nequi_confirmation(email, name, total, products, pdf_path=None):
     :param pdf_path: Ruta al archivo PDF del recibo para adjuntarlo.
     """
     try:
-        subject = "🍫 Confirmación de tu pedido en Marichuy"
+        subject = "Confirmación de tu pedido en Marichuy"
         
         # Construir el resumen de productos
         products_summary = ""
