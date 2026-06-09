@@ -47,8 +47,12 @@
     <span class="badge bg-primary">Preparando tu pedido</span>
 {% elif order.status == 'Verificando pedido' %}
     <span class="badge bg-info text-dark">Verificando pedido</span>
-{% else %}
+{% elif order.status == 'Verificando pago' %}
+    <span class="badge bg-info text-dark">Verificando pago</span>
+{% elif order.status == 'Cancelado' %}
     <span class="badge bg-danger">Cancelado</span>
+{% else %}
+    <span class="badge bg-secondary">{{ order.status }}</span>
 {% endif %}
                             </td>
                             <td>{{ order.created_at|format_datetime }}</td>

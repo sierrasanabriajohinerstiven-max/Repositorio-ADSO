@@ -130,6 +130,18 @@ def checkout():
             session.pop('cart', None)
             return redirect(url_for('main.nequi_payment', order_id=order.id))
             
+        # Send confirmation email for cash orders
+        if payment_method == 'efectivo':
+            from app.utils.email_service import send_cash_confirmation
+            from app.utils.pdf_generator import generate_receipt
+            
+            # Generate PDF for cash receipt
+            cart_items_for_pdf = {str(item.product_id): {'name': item.product.name, 'quantity': item.quantity, 'price': item.price} for item in order.items}
+            pdf_bytes, pdf_path = generate_receipt(order, cart_items_for_pdf)
+            
+            products_list = list(cart_items_for_pdf.values())
+            send_cash_confirmation(order.customer_email or order.customer.email, order.customer_name or order.customer.username, order.total_amount, products_list, order, pdf_path)
+
         session.pop('cart', None)
         return redirect(url_for('main.order_success', payment_method=payment_method))
         

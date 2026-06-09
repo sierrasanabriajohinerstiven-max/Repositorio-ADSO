@@ -35,6 +35,7 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <select name="status" class="form-select form-select-sm bg-dark text-light border-secondary d-inline-block w-auto" onchange="this.form.submit()">
                                 <option value="Verificando pedido" {% if order.status == 'Verificando pedido' %}selected{% endif %}>Verificando pedido</option>
+                                <option value="Verificando pago" {% if order.status == 'Verificando pago' %}selected{% endif %}>Verificando pago</option>
                                 <option value="Preparando tu pedido" {% if order.status == 'Preparando tu pedido' %}selected{% endif %}>Preparando tu pedido</option>
                                 <option value="Pedido en camino" {% if order.status == 'Pedido en camino' %}selected{% endif %}>Pedido en camino</option>
                                                         <option value="Pedido entregado" {% if order.status == 'Pedido entregado' %}selected{% endif %}>Pedido entregado</option>

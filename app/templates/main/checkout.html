@@ -36,14 +36,20 @@
                 </div>
                 
                 <div id="nequi_fields" style="display: none;" class="p-3 bg-dark border border-warning rounded mb-4">
-                    <h5 class="text-warning mb-3"><i class="fa-solid fa-file-invoice"></i> Datos para el recibo</h5>
+                    <h5 class="text-warning mb-3"><i class="fa-solid fa-file-invoice"></i> Información adicional para pago Nequi</h5>
+                    <p class="text-bone small">Al confirmar, serás redirigido a la página de pago Nequi donde podrás subir tu comprobante.</p>
+                </div>
+                
+                <div class="p-3 bg-dark border border-secondary rounded mb-4">
+                    <h5 class="text-warning mb-3"><i class="fa-solid fa-envelope"></i> Datos para el recibo</h5>
                     <div class="mb-3">
                         <label for="customer_name" class="form-label text-bone">Nombre Completo</label>
-                        <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Ej: Juan Pérez">
+                        <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Ej: Juan Pérez" value="{{ current_user.username }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="customer_email" class="form-label text-bone">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="customer_email" name="customer_email" value="{{ current_user.email }}">
+                        <input type="email" class="form-control" id="customer_email" name="customer_email" value="{{ current_user.email }}" required>
+                        <small class="text-muted">Te enviaremos el recibo y actualizaciones de tu pedido a este correo.</small>
                     </div>
                 </div>
                 
@@ -76,18 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const radioEfectivo = document.getElementById('pago_efectivo');
     const radioNequi = document.getElementById('pago_nequi');
     const nequiFields = document.getElementById('nequi_fields');
-    const nameInput = document.getElementById('customer_name');
-    const emailInput = document.getElementById('customer_email');
 
     function toggleNequi() {
         if (radioNequi.checked) {
             nequiFields.style.display = 'block';
-            nameInput.required = true;
-            emailInput.required = true;
         } else {
             nequiFields.style.display = 'none';
-            nameInput.required = false;
-            emailInput.required = false;
         }
     }
 

@@ -141,6 +141,12 @@ def send_status_email(order, new_status, customer_email, customer_name):
                 'message': 'Hemos recibido tu solicitud y actualmente estamos verificando los detalles y el pago. Pronto comenzaremos a prepararlo.',
                 'color': '#17a2b8'
             },
+            'Verificando pago': {
+                'subject': f'Estamos verificando el pago de tu pedido #{order.id}',
+                'heading': 'Verificando pago',
+                'message': 'Hemos recibido tu comprobante de pago y actualmente lo estamos validando. Una vez confirmado, procederemos con la preparación de tu pedido.',
+                'color': '#17a2b8'
+            },
             'Preparando tu pedido': {
                 'subject': f'Tu pedido #{order.id} está en preparación',
                 'heading': '¡Tu pedido está en preparación!',
@@ -288,4 +294,64 @@ def send_verification_confirmed_email(order, customer_email, customer_name):
 
     except Exception as e:
         print(f"Error enviando correo de verificación: {e}")
+        return False
+
+def send_cash_confirmation(email, name, total, products, order, pdf_path=None):
+    try:
+        subject = f"Confirmación de tu pedido #{order.id} en Marichuy - Pago Pendiente"
+        
+        products_html = ""
+        for item in products:
+            product_total = item['price'] * item['quantity']
+            products_html += f"<tr><td style='padding: 8px 0; border-bottom: 1px solid #eee; text-align: left;'><b>{item['quantity']}x {item['name']}</b></td><td style='padding: 8px 0; border-bottom: 1px solid #eee; text-align: right;'>${product_total:,.2f}</td></tr>"
+            
+        content = f"""
+        <p>Hola <strong style="color: #3E2723;">{name}</strong>,</p>
+        <p>¡Gracias por tu compra en Marichuy!</p>
+        <p>Hemos recibido tu pedido correctamente. Recuerda que el <strong>pago se realizará en efectivo al momento de la entrega</strong>.</p>
+        <p>Adjunto a este correo encontrarás el <b>recibo oficial</b> de tu pedido en formato PDF.</p>
+        """
+
+        order_details = f"""
+        <div style="background-color: #FAF8F5; border: 1px solid #EAE0C8; border-radius: 10px; padding: 25px; margin: 25px 0; text-align: center;">
+            <h3 style="color: #3E2723; margin: 0 0 15px 0; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Resumen de tu pedido</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #555;">
+                {products_html}
+                <tr>
+                    <td style="padding: 15px 0 0 0; text-align: right; color: #3E2723; font-weight: bold;">TOTAL:</td>
+                    <td style="padding: 15px 0 0 0; text-align: right; color: #d4af37; font-size: 18px; font-weight: bold;">${total:,.2f}</td>
+                </tr>
+            </table>
+            <div style="margin-top: 20px;">
+                <span style="background-color: #ffc107; color: #000; padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: bold; letter-spacing: 1px;">
+                    PAGO PENDIENTE - CONTRA ENTREGA
+                </span>
+            </div>
+        </div>
+        """
+
+        html_body = get_email_template(
+            title=subject,
+            heading="¡Pedido recibido!",
+            content=content,
+            footer_msg="El pago se realizará en efectivo al momento de recibir tu pedido. ¡Esperamos que disfrutes de nuestro chocolate!",
+            order_details=order_details
+        )
+
+        sender_email = current_app.config.get('MAIL_DEFAULT_SENDER', 'marichuyy.m.a@gmail.com')
+        msg = Message(
+            subject=subject,
+            sender=("Marichuy Chocolates", sender_email),
+            recipients=[email],
+            html=html_body
+        )
+        
+        if pdf_path:
+            with open(pdf_path, 'rb') as fp:
+                msg.attach(filename="recibo.pdf", content_type="application/pdf", data=fp.read())
+        
+        mail.send(msg)
+        return True
+    except Exception as e:
+        print("Error enviando el correo de efectivo:", e)
         return False
